@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ocean-rails (1.18.4)
+    ocean-rails (1.18.5)
       faraday
       faraday_middleware
       ffi-rzmq

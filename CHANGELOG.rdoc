@@ -1,3 +1,7 @@
+== v1.18.5
+
+* Debug release.
+
 == v1.18.4
 
 * Conditionalised the definition of the helper +api_user_url+.
