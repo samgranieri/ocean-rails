@@ -7,6 +7,7 @@ Ocean requires Ruby 2.0 and Ruby on Rails 4.0.0 or later.
 
 {<img src="https://badge.fury.io/rb/ocean-rails.png" alt="Gem Version" />}[http://badge.fury.io/rb/ocean-rails]
 
+
 === Documentation
 * Ocean gem API: http://rdoc.info/github/OceanDev/ocean-rails
 * Ocean gem on Rubygems: https://rubygems.org/gems/ocean-rails
@@ -33,11 +34,8 @@ same directory for reference. Don't change it: it is under version control. The 
 you should change, <code>config/config.yml</code>, isn't, as it will contain site-specific and/or
 confidential data.
 
-Verify that your setup is OK by executing
-
- rspec
-
-All tests should pass.
+There are no specs to run at this point: all functionality provided by the +ocean-rails+
+gem already is exhaustively tested in the +ocean-rails+ spec suite.
 
 
 === Creating an Ocean Resource
