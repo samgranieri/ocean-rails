@@ -10,7 +10,8 @@ run "bundle install"
 
 # Create a temporary config.yml file
 file 'config/config.yml', <<-CODE
-  # This is a temporary file which will be overwritten during setup
+# This is a temporary file which will be overwritten during setup
+FOO: who_cares
 CODE
 
 # Set up the application as a SOA service Rails application
