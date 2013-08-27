@@ -1,3 +1,7 @@
+== v1.18.1
+
+* The +ocean_setup+ generator updated.
+
 == v1.18.0
 
 * The +ocean-rails+ gem is now an engine. This allows us to supply the <tt>/alive</tt>

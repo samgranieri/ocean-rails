@@ -8,6 +8,11 @@ run "rvm use ruby-2.0.0-p195@rails-4.0.0"
 # Run bundle install - we need the generators in it now
 run "bundle install"
 
+# Create a temporary config.yml file
+file 'config/config.yml', <<-CODE
+  # This is a temporary file which will be overwritten during setup
+CODE
+
 # Set up the application as a SOA service Rails application
 generate "ocean_setup", app_name
 
