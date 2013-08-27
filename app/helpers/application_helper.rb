@@ -19,7 +19,7 @@ module ApplicationHelper
   # This is needed everywhere except inside the Auth service to render creator
   # and updater links correctly.
   #
-  unless helper.respond_to?(:api_user_url)
+  unless method_defined?(:api_user_url)
 
     def api_user_url(x)
       if x.blank?
