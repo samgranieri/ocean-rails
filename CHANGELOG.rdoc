@@ -1,3 +1,7 @@
+== v1.18.4
+
+* Conditionalised the definition of the helper +api_user_url+.
+
 == v1.18.3
 
 * Yet another update to the +ocean_setup+ generator.
@@ -12,7 +16,7 @@
 
 == v1.18.0
 
-* The +ocean-rails+ gem is now an engine. This allows us to supply the <tt>/alive</tt>
+* The +ocean-rails+ gem is now an engine. This allows us to serve the <tt>/alive</tt>
   controller, the error controller, the application helper and various initializers
   from the gem rather than by installing source templates via the app generator. 
 

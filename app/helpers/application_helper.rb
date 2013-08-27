@@ -19,16 +19,20 @@ module ApplicationHelper
   # This is needed everywhere except inside the Auth service to render creator
   # and updater links correctly.
   #
-  def api_user_url(x)
-    if x.blank?
-      "#{OCEAN_API_URL}/#{Api.version_for :api_user}/api_users/0"
-    elsif x.is_a?(Integer)
-      "#{OCEAN_API_URL}/#{Api.version_for :api_user}/api_users/#{x}"
-    elsif x.is_a?(String)
-      x
-    else
-      raise "api_user_url takes an integer, a string, or nil"
+  unless respond_to?(:api_user_url)
+
+    def api_user_url(x)
+      if x.blank?
+        "#{OCEAN_API_URL}/#{Api.version_for :api_user}/api_users/0"
+      elsif x.is_a?(Integer)
+        "#{OCEAN_API_URL}/#{Api.version_for :api_user}/api_users/#{x}"
+      elsif x.is_a?(String)
+        x
+      else
+        raise "api_user_url takes an integer, a string, or nil"
+      end
     end
-  end
+
+  end 
 
 end
