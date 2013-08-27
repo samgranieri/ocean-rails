@@ -1,3 +1,7 @@
+== v1.18.3
+
+* Yet another update to the +ocean_setup+ generator.
+
 == v1.18.2
 
 * The +ocean_setup+ generator updated again.
