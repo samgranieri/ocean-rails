@@ -1,0 +1,90 @@
+== v1.18.0
+
+* The +ocean-rails+ gem is now an engine. This allows us to supply the <tt>/alive</tt>
+  controller, the error controller, the application helper and various initializers
+  from the gem rather than by installing source templates via the app generator. 
+
+== v1.17.1
+
+* Application controller filters +require_x_api_token+, +authorize_action+, and
+  +require_conditional+ now all do a <tt>expires_in 0, must_revalidate: true</tt>
+  when they fail, to prevent caching of negatives.
+
+== v1.17.0
+
+* The +before_action+ +required_conditional+ has been added. It requires the request
+  to be a conditional one, i.e. it must have either an +If-None-Match+ or an +If-Modified-Since+
+  HTTP header, or both. If the request isn't conditional, a 428 error is returned. The body will 
+  be a standard API error message, with two error strings: <tt>"Precondition Required"</tt> and 
+  <tt>"If-None-Match and/or If-Modified-Since missing"</tt>.
+* Added documentation for +deny_with+.
+
+== v1.16.1
+
+* Added specs for some parts hitherto without direct tests.
+* Added deny_with, as a counterpart to permit_with.
+* Added Ocean blog URL.
+
+== v1.16.0
+
+* Now using ruby-2.0.0-p247.
+
+== v1.15.6
+
+* +ocean_resource_controller+ now also takes the keyword arg +permitted_attributes+,
+  which is accessible via the class accessor +ocean_resource_controller_permitted_attributes+.
+  As yet the keyword arg has no effect, but it will be used when switching to Strong 
+  Parameters, so we can get rid of the last Rails 3 compatibility gem.
+* Better gem description in the gemspec.
+* Changed the format of the CHANGELOG to RDoc.
+
+== v1.15.5
+
+* Corrected badge.
+
+== v1.15.4
+
+* Badge added.
+* Documentation changes.
+
+== v1.15.3
+
+* +render_validation_errors+ +except+ arg handling corrected.
+
+== v1.15.2
+
+* +ocean_resource_controller+ now takes a +no_validation_errors_on+ keyword (default []) which
+  enumerates the attributes for which 422 validation error info should not be given.
+  This is sometime useful for password information such as hashes and salts.
+  Also, +render_validation_errors+ takes a new keyword parameter +except+ in the same format.
+
+* The API error for non-unique resources no longer mention the class of the resource, but 
+  always is <tt>"Resource not unique"</tt>.
+
+== v1.15.1
+
+* Conditionalised the +rescue_from+ controller clauses: only done when ActiveRecord is
+  present.
+
+== v1.15.0
+
+* +POST+ and +PUT+ actions greatly simplified through the use of controller-level +rescue_from+
+  handlers.
+
+== v1.14.3
+
+* RDoc documentation for the +ocean-rails+ gem is now complete.
+
+== v1.14.2
+
+* Corrected typo.
+
+== v1.14.1
+
+* Added the MIT license to the gemspec file. Added Rubygems URL and mailing list
+  info to the +README+.
+
+== v1.14.0
+
+* Initial release via Rubygems.org.
+
