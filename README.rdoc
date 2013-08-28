@@ -9,7 +9,7 @@ Ocean requires Ruby 2.0 and Ruby on Rails 4.0.0 or later.
 
 
 === Documentation
-* Ocean gem API: http://rdoc.info/github/OceanDev/ocean-rails
+* Ocean gem API: http://rdoc.info/github/OceanDev/ocean-rails/frames
 * Ocean gem on Rubygems: https://rubygems.org/gems/ocean-rails
 * Ocean framework: http://wiki.oceanframework.net
 * Ocean mailing list: http://groups.google.com/group/oceanframework
