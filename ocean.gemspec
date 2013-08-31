@@ -49,6 +49,7 @@ OS, and back end code completely agnostic of whether it is called by a client br
   s.add_development_dependency "rails", "~> 4.0"
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "rspec-rails"
+  s.add_development_dependency "webmock"
   s.add_development_dependency "simplecov"
   s.add_development_dependency "factory_girl_rails", "~> 4.0"
 end
