@@ -33,8 +33,11 @@ describe Api do
     it "should handle GET" do
       stub_request(:get, "http://example.com/v1/api_users").
          with(headers: {'Accept'=>'application/json', 'Content-Type'=>'application/json', 'X-API-Token'=>"sjhdfsd"}).
-         to_return(status: 200, body: '{"x":2,"y":1}', headers: {'Content-Type'=>'application/json'})
-      Api.call "http://example.com", :get, 'api_user', "/api_users", {}, {x_api_token: "sjhdfsd"}
+         to_return(status: 200, headers: {'Content-Type'=>'application/json'}, body: '{"x":2,"y":1}')
+      response = Api.call "http://example.com", :get, 'api_user', "/api_users", {}, {x_api_token: "sjhdfsd"}
+      response.status.should == 200
+      response.headers.should == {"content-type"=>"application/json"}
+      response.body.should == {"x"=>2, "y"=>1}
     end
 
     it "should handle POST" do
@@ -42,59 +45,96 @@ describe Api do
          with(headers: {'Accept'=>'application/json', 'Content-Type'=>'application/json', 'X-API-Token'=>"sjhdfsd"},
               body: "this is the body").
          to_return(status: 201, body: '{"x":2,"y":1}', headers: {'Content-Type'=>'application/json'})
-      Api.call "http://example.com", :post, 'api_user', "/api_users", "this is the body", {x_api_token: "sjhdfsd"}
-    end
+      response = Api.call "http://example.com", :post, 'api_user', "/api_users", "this is the body", {x_api_token: "sjhdfsd"}
+      response.status.should == 201
+      response.headers.should == {"content-type"=>"application/json"}
+      response.body.should == {"x"=>2, "y"=>1}
+   end
 
     it "should handle PUT" do
       stub_request(:put, "http://example.com/v1/api_users").
          with(headers: {'Accept'=>'application/json', 'Content-Type'=>'application/json', 'X-API-Token'=>"sjhdfsd"},
               body: "this is the body").
          to_return(status: 200, body: '{"x":2,"y":1}', headers: {'Content-Type'=>'application/json'})
-      Api.call "http://example.com", :put, 'api_user', "/api_users", "this is the body", {x_api_token: "sjhdfsd"}
+      response = Api.call "http://example.com", :put, 'api_user', "/api_users", "this is the body", {x_api_token: "sjhdfsd"}
+      response.status.should == 200
+      response.headers.should == {"content-type"=>"application/json"}
+      response.body.should == {"x"=>2, "y"=>1}
     end
 
     it "should handle DELETE" do
       stub_request(:delete, "http://example.com/v1/api_users").
          with(headers: {'Accept'=>'application/json', 'Content-Type'=>'application/json', 'X-API-Token'=>"sjhdfsd"}).
          to_return(status: 200, body: '', headers: {'Content-Type'=>'application/json'})
-      Api.call "http://example.com", :delete, 'api_user', "/api_users", {}, {x_api_token: "sjhdfsd"}
-    end
+      response = Api.call "http://example.com", :delete, 'api_user', "/api_users", {}, {x_api_token: "sjhdfsd"}
+      response.status.should == 200
+      response.headers.should == {"content-type"=>"application/json"}
+      response.body.should == nil
+   end
 
     it "should handle PURGE" do
       stub_request(:purge, "http://example.com/v1/api_users").
          with(headers: {'Accept'=>'application/json', 'Content-Type'=>'application/json'}).
          to_return(status: 200, body: '', headers: {'Content-Type'=>'application/json'})
-      Api.call "http://example.com", :purge, 'api_user', "/api_users"
-    end
+      response = Api.call "http://example.com", :purge, 'api_user', "/api_users"
+      response.status.should == 200
+      response.headers.should == {"content-type"=>"application/json"}
+      response.body.should == nil
+   end
 
     it "should handle BAN" do
       stub_request(:ban, "http://example.com/v1/api_users").
          with(headers: {'Accept'=>'application/json', 'Content-Type'=>'application/json'}).
          to_return(status: 200, body: '', headers: {'Content-Type'=>'application/json'})
-      Api.call "http://example.com", :ban, 'api_user', "/api_users"
+      response = Api.call "http://example.com", :ban, 'api_user', "/api_users"
+      response.status.should == 200
+      response.headers.should == {"content-type"=>"application/json"}
+      response.body.should == nil
     end
 
   end
 
 
   it "Api.get should use Api.call" do
-    Api.stub(:call).and_return(:aye)
-    Api.get(:some_service, "/resource/path/foo/bar").should == :aye
+    stub_request(:get, "http://forbidden.example.com/v1/api_users/1/groups").
+      with(headers: {'Accept'=>'application/json', 'Content-Type'=>'application/json', 'X-API-Token'=>"sjhdfsd"}).
+      to_return(status: 200, body: '{"x":2,"y":1}', headers: {'Content-Type'=>'application/json'})
+    response = Api.get(:api_users, "/api_users/1/groups", {}, {x_api_token: "sjhdfsd"})
+    response.status.should == 200
+    response.headers.should == {"content-type"=>"application/json"}
+    response.body.should == {"x"=>2, "y"=>1}
   end
 
   it "Api.post should use Api.call" do
-    Api.stub(:call).and_return(:aye)
-    Api.post(:some_service, "/resource/path/foo/bar").should == :aye
+    stub_request(:post, "http://forbidden.example.com/v1/api_users/1/groups").
+      with(body: "this is the body",
+           headers: {'Accept'=>'application/json', 'Content-Type'=>'application/json', 'X-Api-Token'=>'sjhdfsd'}).
+      to_return(status: 200, body: '{"x":2,"y":1}', headers: {'Content-Type'=>'application/json'})
+    response = Api.post(:api_users, "/api_users/1/groups", "this is the body", {x_api_token: "sjhdfsd"})
+    response.status.should == 200
+    response.headers.should == {"content-type"=>"application/json"}
+    response.body.should == {"x"=>2, "y"=>1}
   end
 
   it "Api.put should use Api.call" do
-    Api.stub(:call).and_return(:aye)
-    Api.put(:some_service, "/resource/path/foo/bar").should == :aye
+    stub_request(:put, "http://forbidden.example.com/v1/api_users/1/groups").
+      with(body: "this is the body",
+           headers: {'Accept'=>'application/json', 'Content-Type'=>'application/json', 'X-Api-Token'=>'sjhdfsd'}).
+      to_return(status: 200, body: '{"x":2,"y":1}', headers: {'Content-Type'=>'application/json'})
+    response = Api.put(:api_users, "/api_users/1/groups", "this is the body", {x_api_token: "sjhdfsd"})
+    response.status.should == 200
+    response.headers.should == {"content-type"=>"application/json"}
+    response.body.should == {"x"=>2, "y"=>1}
   end
 
   it "Api.delete should use Api.call" do
-    Api.stub(:call).and_return(:aye)
-    Api.delete(:some_service, "/resource/path/foo/bar").should == :aye
+    stub_request(:delete, "http://forbidden.example.com/v1/api_users/1/groups").
+      with(headers: {'Accept'=>'application/json', 'Content-Type'=>'application/json', 'X-API-Token'=>"sjhdfsd"}).
+      to_return(status: 200, body: '', headers: {'Content-Type'=>'application/json'})
+    response = Api.delete(:api_users, "/api_users/1/groups", {}, {x_api_token: "sjhdfsd"})
+    response.status.should == 200
+    response.headers.should == {"content-type"=>"application/json"}
+    response.body.should == nil
   end
 
 
