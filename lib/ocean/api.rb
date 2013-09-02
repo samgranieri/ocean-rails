@@ -49,6 +49,30 @@ class Api
       
   
   #
+  # Adds environment info to the basename, so that testing and execution in various combinations
+  # of the Rails env and the Chef environment can be done without collision. 
+  #
+  # The chef_env will always be appended to the basename, since we never want to share queues 
+  # between different Chef environments. 
+  #
+  # If the chef_env is 'dev' or 'ci', we must separate things as much as
+  # possible: therefore, we add the local IP number and the Rails environment. 
+  #
+  # We also add the same information if by any chance the Rails environment isn't 'production'. 
+  # This is a precaution; in staging and prod apps should always run in Rails production mode, 
+  # but if by mistake they don't, we must prevent the production queues from being touched.
+  #
+  def self.adorn_basename(basename, chef_env: "dev", rails_env: "development")
+    fullname = "#{basename}_#{chef_env}"
+    if rails_env != 'production' || chef_env == 'dev' || chef_env == 'ci'
+      local_ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}.gsub('.', '-')
+      fullname += "_#{local_ip}_#{rails_env}"
+    end
+    fullname
+  end
+
+
+  #
   # Makes a HTTP request to +host_url+ using the HTTP method +method+. The +resource_name+
   # is used to obtain the latest version string of the resource. The arg +path+ is the
   # local path, +args+ is a hash of query args, and +headers+ a hash of extra HTTP headers.

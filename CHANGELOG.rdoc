@@ -1,3 +1,9 @@
+== v1.19.0
+
+* Added Api.adorn_basename to create unique names for shared resources like AWS queues
+  and DB names, depending on the execution environment (Chef and Rails).
+* Using the webmock gem to mock HTTP traffic in specs for the Api class.
+
 == v1.18.8
 
 * Reverted back to unconditionalised api_user_url.

@@ -24,7 +24,6 @@ describe Api do
       Api.stub(:post).and_return(double(status: 666))
       lambda { Api.authenticate }.should raise_error("Authentication weirdness")
     end
-
   end
 
 
@@ -178,7 +177,6 @@ describe Api do
       Api.stub(:get).and_return(double(:status => 200))
       Api.permitted?('some-client-token').status.should == 200
     end
-    
   end
 
 
@@ -222,7 +220,6 @@ describe Api do
       qs = Api.authorization_string({}, "fubars", "show", nil, nil, 'foo').split(':')
       qs[1].should == "fubars"
     end
-
   end
 
 
@@ -273,8 +270,46 @@ describe Api do
                              "fubars", "blahonga_create").
         should == ['blahonga', 'POST']
     end
-
   end
      
   
+  describe ".adorn_name" do
+
+    it "should return a string" do
+      Api.adorn_basename("SomeBaseName").should be_a String
+    end
+
+    it "should return a string containing the basename" do
+      Api.adorn_basename("SomeBaseName").should include "SomeBaseName"
+    end
+
+    it "should return a string containing the Chef environment" do
+      Api.adorn_basename("SomeBaseName", chef_env: "zuul").should include "zuul"
+    end
+
+    it "should add only the Chef env if the Rails env is production" do
+      local_ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}.gsub('.', '-')
+      Api.adorn_basename("Q", chef_env: "prod", rails_env: 'production').should ==     "Q_prod"
+      Api.adorn_basename("Q", chef_env: "staging", rails_env: 'production').should ==  "Q_staging"
+      Api.adorn_basename("Q", chef_env: "master", rails_env: 'production').should ==   "Q_master"
+    end
+
+    it "should add IP and rails_env if the chef_env is 'dev' or 'ci' or if rails_env isn't 'production'" do
+      local_ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}.gsub('.', '-')
+      Api.adorn_basename("Q", chef_env: "dev",  rails_env: 'development').should ==    "Q_dev_#{local_ip}_development"
+      Api.adorn_basename("Q", chef_env: "dev",  rails_env: 'test').should ==           "Q_dev_#{local_ip}_test"
+      Api.adorn_basename("Q", chef_env: "dev",  rails_env: 'production').should ==     "Q_dev_#{local_ip}_production"
+      Api.adorn_basename("Q", chef_env: "ci",   rails_env: 'development').should ==    "Q_ci_#{local_ip}_development"
+      Api.adorn_basename("Q", chef_env: "ci",   rails_env: 'test').should ==           "Q_ci_#{local_ip}_test"
+      Api.adorn_basename("Q", chef_env: "ci",   rails_env: 'production').should ==     "Q_ci_#{local_ip}_production"
+      Api.adorn_basename("Q", chef_env: "master", rails_env: 'development').should ==  "Q_master_#{local_ip}_development"
+      Api.adorn_basename("Q", chef_env: "master", rails_env: 'test').should ==         "Q_master_#{local_ip}_test"
+      Api.adorn_basename("Q", chef_env: "staging", rails_env: 'development').should == "Q_staging_#{local_ip}_development"
+      Api.adorn_basename("Q", chef_env: "staging", rails_env: 'test').should ==        "Q_staging_#{local_ip}_test"
+      Api.adorn_basename("Q", chef_env: "staging", rails_env: 'production').should ==  "Q_staging"
+      Api.adorn_basename("Q", chef_env: "prod", rails_env: 'development').should ==    "Q_prod_#{local_ip}_development"
+      Api.adorn_basename("Q", chef_env: "prod", rails_env: 'test').should ==           "Q_prod_#{local_ip}_test"
+    end
+  end
+
 end
