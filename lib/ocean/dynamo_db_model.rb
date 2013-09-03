@@ -1,11 +1,12 @@
 
 class DynamoDbModel
 
-  DEFAULT_FIELDS = {
-    id:         :string, 
-    created_at: :datetime, 
-    updated_at: :datetime
-  }
+  DEFAULT_FIELDS = [
+    [:id,           :string], 
+    [:created_at,   :datetime], 
+    [:updated_at,   :datetime],
+    [:lock_version, :integer, {default: 0}]
+  ]
 
 
   class Base
@@ -31,13 +32,13 @@ class DynamoDbModel
     attr_reader :attributes
 
 
-    def self.field(name, type=:string, default: nil)
+    def self.field(name, type=:string, **pairs)
       attr_accessor name
       fields[name] = {type:    type, 
-                      default: default}
+                      default: pairs[:default]}
     end
 
-    DEFAULT_FIELDS.each { |k, v| Base.field k, v }
+    DEFAULT_FIELDS.each { |k, name, **pairs| Base.field k, name, **pairs }
 
 
     define_model_callbacks :initialize, only: :after
