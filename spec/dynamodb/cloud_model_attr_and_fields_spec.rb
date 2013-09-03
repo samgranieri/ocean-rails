@@ -21,16 +21,12 @@ describe CloudModel do
     CloudModel.fields.should include :updated_at
   end
 
-  it "should have a :name field" do
-    CloudModel.fields.should include :name
+  it "should have a :token field" do
+    CloudModel.fields.should include :token
   end
 
-  it "should have :name field with a defaulted type of String" do
-    CloudModel.fields[:name][:type].should == :string
-  end
-
-  it "should have a :weight field with a type of :float" do
-    CloudModel.fields[:weight][:type].should == :float
+  it "should have :token field with a defaulted type of String" do
+    CloudModel.fields[:token][:type].should == :string
   end
 
   it "should have a :steps field with a type of :serialized and a :default of []" do
@@ -47,33 +43,35 @@ describe CloudModel do
 
   it "should define accessors for all declared fields" do
     i = CloudModel.new
-    i.should respond_to :name
-    i.should respond_to :name=
+    i.should respond_to :uuid
+    i.should respond_to :uuid=
   end
 
   it "should allow fields to be read and written" do
     i = CloudModel.new
-    i.weight.should == nil
-    i.weight = 87
-    i.weight.should == 87
+    i.token.should == nil
+    i.token = "foo"
+    i.token.should == "foo"
   end
 
 
   it "should set the values supplied in the call to new" do
-    i = CloudModel.new name: "Barack Obladiobladama", weight: 200
-    i.name.should == "Barack Obladiobladama"
-    i.weight.should == 200
+    i = CloudModel.new uuid: "Barack-Obladiobladama", created_by: "http://somewhere"
+    i.uuid.should == "Barack-Obladiobladama"
+    i.created_by.should == "http://somewhere"
   end
 
   it "should set defaults for value not supplied in the call to new" do
     i = CloudModel.new
     i.steps.should == []
+    j = CloudModel.new steps: [{}, {}, {}]
+    j.steps.should_not == []
   end
 
 
-  it "should require the name to be present" do
-    CloudModel.new.valid?.should == false
-    CloudModel.new(name: "Ed").valid?.should == true
+  it "should require the uuid to be present" do
+    CloudModel.new(uuid: "").valid?.should == false
+    CloudModel.new(uuid: "Ed").valid?.should == true
   end
 
 
@@ -85,8 +83,8 @@ describe CloudModel do
     expect { CloudModel.new.attributes = {} }.to raise_error
   end
 
-  it "should have string members" do
-    CloudModel.new.attributes.should include 'name'
+  it "should have string keys" do
+    CloudModel.new.attributes.should include 'uuid'
     CloudModel.new.attributes.should include 'created_at'
   end
 

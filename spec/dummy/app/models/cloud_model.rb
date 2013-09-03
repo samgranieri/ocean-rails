@@ -1,12 +1,49 @@
 class CloudModel < DynamoDbModel::Base
 
-  field :name
-  field :weight,     :float
-  field :uuid,       :string
-  field :destroy_at, :datetime
-  field :steps,      :serialized, default: []
+  # field :name
+  # field :weight,     :float
 
-  validates_presence_of :name
+  field :uuid,                 :string,      default: lambda { SecureRandom.uuid }
+  field :credentials,          :string,      default: ""
+  field :token
+  field :steps,                :serialized,  default: []
+  field :max_seconds_in_queue, :integer,     default: 1.day
+  field :default_poison_limit, :integer,     default: 5
+  field :default_step_time,    :integer,     default: 30
+  field :created_by,           :string
+  field :updated_by,           :string
+  field :destroy_at,           :datetime
+  field :started_at,           :datetime
+  field :last_completed_step,  :integer
+  field :finished_at,          :datetime
+  field :succeeded,            :boolean,     default: false
+  field :failed,               :boolean,     default: false
+  field :poison,               :boolean,     default: false
+
+
+  # # Attributes
+  # attr_accessible :uuid, :lock_version,
+  #                 :steps, :max_seconds_in_queue, :default_poison_limit,
+  #                 :credentials, :token, :default_step_time
+
+
+
+  # Validations
+  validates_presence_of :uuid
+
+  validates_each :steps do |record, attr, value|
+    record.errors.add(attr, 'must be an Array') unless value.is_a?(Array)
+  end 
+
+  validates :credentials, presence: { message: "must be specified", on: :create }
+
+  validates_each :credentials, on: :create, allow_blank: true do |job, attr, val|
+    username, password = Api.decode_credentials val
+    job.errors.add(attr, "are malformed") if username.blank? || password.blank?
+  end
+
+
+
 
 
   # Callbacks
