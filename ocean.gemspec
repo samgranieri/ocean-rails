@@ -45,6 +45,7 @@ OS, and back end code completely agnostic of whether it is called by a client br
   s.add_dependency "ffi-rzmq"           # ZeroMQ
   s.add_dependency "rack-attack"        # Flooding, etc.
   s.add_dependency "jbuilder"           # We use Jbuilder to render our JSON responses
+  s.add_dependency "aws-sdk", '~> 1.0'  # Amazon Web Services Ruby SDK
 
   s.add_development_dependency "rails", "~> 4.0"
   s.add_development_dependency "sqlite3"
@@ -52,4 +53,5 @@ OS, and back end code completely agnostic of whether it is called by a client br
   s.add_development_dependency "webmock"
   s.add_development_dependency "simplecov"
   s.add_development_dependency "factory_girl_rails", "~> 4.0"
+  s.add_development_dependency "fake_dynamo", "~> 0.2.4"
 end
