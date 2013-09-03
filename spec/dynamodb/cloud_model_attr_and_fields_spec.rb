@@ -77,18 +77,6 @@ describe CloudModel do
   end
 
 
-  it "should run the after_initialize callback" do
-    CloudModel.new.uuid.should be_a String
-  end
-
-  it "should run the before_validation callback" do
-    i = CloudModel.new
-    i.destroy_at.should == nil
-    i.valid?
-    i.destroy_at.should be_a Time
-  end
-
-
   it "should have an attribute reader with as many elements as there are fields" do
     CloudModel.new.attributes.length.should == CloudModel.fields.length
   end
