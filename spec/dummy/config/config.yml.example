@@ -26,10 +26,15 @@ API_VERSIONS:
   _default: v1
 
 # This is the list of IP numbers for the Varnish instances. (For PURGE and BAN.)
-LOAD_BALANCERS: []
+LOAD_BALANCERS: [127.0.0.1]
 
 # This is the list of IP numbers for the ZeroMQ log hosts. (Only used in production.)
 LOG_HOSTS: []
+
+# Amazon Web Services config
+AWS_ACCESS_KEY_ID:     yyyyyyyyyyyyyyyyy
+AWS_SECRET_ACCESS_KEY: zzzzzzzzzzzzzzzzz
+AWS_REGION:            eu-west-1
 
 
 ##########################################################################################

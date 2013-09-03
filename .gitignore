@@ -11,3 +11,6 @@ spec/dummy/.sass-cache
 
 # Ignore Tork config
 /.tork
+
+# Ignore config/config.yml in dummy app
+spec/dummy/config/config.yml
