@@ -36,6 +36,8 @@ AWS_ACCESS_KEY_ID:     yyyyyyyyyyyyyyyyy
 AWS_SECRET_ACCESS_KEY: zzzzzzzzzzzzzzzzz
 AWS_REGION:            eu-west-1
 
+CHEF_ENV: dev
+
 
 ##########################################################################################
 # This section allows you to specify values specific for a particular Rails

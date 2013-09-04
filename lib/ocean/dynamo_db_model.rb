@@ -1,4 +1,6 @@
 
+require "aws-sdk"
+
 class DynamoDbModel
 
   DEFAULT_FIELDS = [
@@ -17,16 +19,43 @@ class DynamoDbModel
     #require "active_model/mass_assignment_security.rb"
 
 
-    class_attribute :table_hash_key
-    class_attribute :table_range_key
+    class_attribute :dynamo_client, instance_writer: false
+    self.dynamo_client ||= AWS::DynamoDB.new
+
+
+
+    class_attribute :table_name, instance_writer: false
+
+    def self.set_table_name(name)
+      self.table_name = name
+    end
+
+    def self.compute_table_name
+      name.pluralize.underscore
+    end
+
+    class_attribute :table_name_prefix, instance_writer: false
+    class_attribute :table_name_suffix, instance_writer: false
+
+    def self.table_full_name
+      "#{table_name_prefix}#{table_name}#{table_name_suffix}"
+    end
+
+
+    class_attribute :table_hash_key, instance_writer: false
+    class_attribute :table_range_key, instance_writer: false
 
     def self.primary_key(hash_key, range_key=nil)
       self.table_hash_key = hash_key
       self.table_range_key = range_key
+      # Find a better place to do the following initialisation:
+      set_table_name compute_table_name unless self.table_name
+      nil
     end
 
 
-    class_attribute :fields
+
+    class_attribute :fields, instance_writer: false
     self.fields = Hash.new
 
     attr_reader :attributes
@@ -55,6 +84,7 @@ class DynamoDbModel
           self.class.class_eval "def #{name}=(value); write_attribute('#{name}', value); end"
         end
         super
+        raise "No primary_key declared" unless table_hash_key
       end
     end
 

@@ -26,7 +26,6 @@ class CloudModel < DynamoDbModel::Base
   #                 :credentials, :token, :default_step_time
 
 
-
   # Validations
   validates_presence_of :uuid
 
@@ -40,9 +39,6 @@ class CloudModel < DynamoDbModel::Base
     username, password = Api.decode_credentials val
     job.errors.add(attr, "are malformed") if username.blank? || password.blank?
   end
-
-
-
 
 
   # Callbacks

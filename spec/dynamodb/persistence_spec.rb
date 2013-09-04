@@ -26,9 +26,7 @@ describe CloudModel do
 
   it "should have a method reload"
 
-  it "should have a method save" do
-    @i.should respond_to :save
-  end
+  it "should have a method save"
 
   it "should have a method save!"
 
