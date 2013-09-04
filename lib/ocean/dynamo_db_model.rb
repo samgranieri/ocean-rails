@@ -9,8 +9,10 @@ class DynamoDbModel
     [:lock_version, :integer, default: 0]
   ]
 
-  class RecordInvalid < StandardError; end
-  class RecordNotSaved < StandardError; end
+  class DynamoDbError < StandardError; end
+  
+  class RecordInvalid < DynamoDbError; end
+  class RecordNotSaved < DynamoDbError; end
 
 
   class Base
