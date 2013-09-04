@@ -101,6 +101,13 @@ class DynamoDbModel
     end
 
 
+    def self.delete_table
+      return false unless dynamo_table.exists? && dynamo_table.status == :active
+      dynamo_table.delete
+      true
+    end
+
+
     # ---------------------------------------------------------
     #
     #  Callbacks

@@ -110,4 +110,21 @@ describe CloudModel do
     CloudModel.establish_db_connection.should == true
   end
 
+
+  it "delete_table should return true if the table was :active" do
+    AWS::DynamoDB::Table.any_instance.should_receive(:exists?).twice.and_return(true)
+    AWS::DynamoDB::Table.any_instance.should_receive(:status).twice.and_return(:active)
+    CloudModel.should_not_receive(:create_table)
+    AWS::DynamoDB::Table.any_instance.should_receive(:delete)
+    CloudModel.establish_db_connection.should == true
+    CloudModel.delete_table.should == true
+  end
+
+  it "delete_table should return false if the table wasn't :active" do
+    AWS::DynamoDB::Table.any_instance.should_receive(:exists?).twice.and_return(true)
+    AWS::DynamoDB::Table.any_instance.should_receive(:status).and_return(:active, :deleting)
+    CloudModel.establish_db_connection.should == true
+    CloudModel.delete_table.should == false
+  end
+
 end
