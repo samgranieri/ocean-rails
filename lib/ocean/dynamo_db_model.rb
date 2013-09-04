@@ -35,6 +35,9 @@ class DynamoDbModel
     class_attribute :table_hash_key, instance_writer: false
     class_attribute :table_range_key, instance_writer: false
 
+    class_attribute :table_read_capacity_units, instance_writer: false
+    class_attribute :table_write_capacity_units, instance_writer: false
+
     class_attribute :fields, instance_writer: false
 
 
@@ -58,6 +61,15 @@ class DynamoDbModel
       # Find a better place to do the following initialisation:
       set_table_name compute_table_name unless self.table_name
       nil
+    end
+
+
+    def self.read_capacity_units(units)
+      self.table_read_capacity_units = units
+    end
+
+    def self.write_capacity_units(units)
+      self.table_write_capacity_units = units
     end
 
 
@@ -92,7 +104,8 @@ class DynamoDbModel
     def self.create_table
       self.dynamo_table = dynamo_client.tables.create(
         table_full_name, 
-        10, 5,
+        table_read_capacity_units, 
+        table_write_capacity_units,
         hash_key: { table_hash_key => fields[table_hash_key][:type]},
         range_key: table_range_key && { table_range_key => fields[table_range_key][:type]}
         )
@@ -122,6 +135,9 @@ class DynamoDbModel
     #  Class initialisation, done once at load time
     #
     # ---------------------------------------------------------
+
+    self.table_read_capacity_units = 10
+    self.table_write_capacity_units = 5
 
     self.fields = HashWithIndifferentAccess.new
     DEFAULT_FIELDS.each { |k, name, **pairs| Base.field k, name, **pairs }

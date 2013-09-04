@@ -1,6 +1,8 @@
 class CloudModel < DynamoDbModel::Base
 
   primary_key :uuid, false
+  read_capacity_units 10
+  write_capacity_units 5
 
   field :uuid,                 :string,      default: lambda { SecureRandom.uuid }
   field :credentials,          :string,      default: ""

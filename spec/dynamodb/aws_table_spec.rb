@@ -105,7 +105,13 @@ describe CloudModel do
     AWS::DynamoDB::Table.any_instance.should_receive(:exists?).and_return(false)
     t = double(AWS::DynamoDB::Table)
     allow(t).to receive(:status).and_return(:creating, :creating, :creating, :active)
-    AWS::DynamoDB::TableCollection.any_instance.should_receive(:create).and_return(t)
+    AWS::DynamoDB::TableCollection.any_instance.should_receive(:create).
+      with("cloud_models", 
+           10, 
+           5, 
+           hash_key: {uuid: :string}, 
+           range_key: false).
+      and_return(t)
     Object.should_receive(:sleep).with(1).exactly(3).times
     CloudModel.establish_db_connection.should == true
   end

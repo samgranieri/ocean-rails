@@ -40,6 +40,31 @@ describe CloudModel do
   end
 
 
+  it "should have a class method read_capacity_units to set the table_read_capacity_units class attr" do
+    CloudModel.table_read_capacity_units.should == 10
+    CloudModel.read_capacity_units(111).should == 111
+    CloudModel.table_read_capacity_units.should == 111
+    CloudModel.table_read_capacity_units = 10           # Restore
+  end
+
+  it "table_read_capacity_units should default to 10" do
+    CloudModel.table_read_capacity_units.should == 10
+  end
+
+
+  it "should have a class method write_capacity_units to set the table_write_capacity_units class attr" do
+    CloudModel.table_write_capacity_units.should == 5
+    CloudModel.write_capacity_units(222).should == 222
+    CloudModel.table_write_capacity_units.should == 222
+    CloudModel.table_write_capacity_units = 5           # Restore
+  end
+
+  it "table_write_capacity_units should default to 5" do
+    CloudModel.table_write_capacity_units.should == 5
+  end
+  
+
+
   it "class should have an automatically supplied created_at field" do
     CloudModel.fields.should include :created_at
   end
