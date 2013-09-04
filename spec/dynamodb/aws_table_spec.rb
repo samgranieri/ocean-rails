@@ -101,6 +101,13 @@ describe CloudModel do
     CloudModel.establish_db_connection.should == true
   end
 
+  it "establish_connection should barf on an unknown table status" do
+    AWS::DynamoDB::Table.any_instance.should_receive(:exists?).and_return(true)
+    AWS::DynamoDB::Table.any_instance.should_receive(:status).twice.and_return(:syphilis)
+    CloudModel.should_not_receive(:create_table)
+    expect { CloudModel.establish_db_connection }.to raise_error
+  end
+
   it "create_table should try to create the table if it doesn't exist" do
     AWS::DynamoDB::Table.any_instance.should_receive(:exists?).and_return(false)
     t = double(AWS::DynamoDB::Table)

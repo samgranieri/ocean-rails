@@ -45,7 +45,7 @@ class CloudModel < DynamoDbModel::Base
 
   # Callbacks
   after_initialize do |j| 
-    j.uuid ||= SecureRandom.uuid
+    j.created_by ||= "Peter"
   end
 
   before_validation do |j| 
@@ -56,12 +56,17 @@ class CloudModel < DynamoDbModel::Base
     j.default_step_time = j.default_step_time * 2   # Just for testing
   end
 
-  # after_create do |j|
-  #   j.enqueue unless j.steps == []
-  # end
+  after_create do |j|
+    #j.enqueue unless j.steps == []
+  end
 
-  # after_update  { |model| model.ban }
-  # after_destroy { |model| model.ban }
+  after_update  do |model| 
+    #model.ban
+  end
+
+  after_destroy do |model|
+    #model.ban
+  end
 
 
 end

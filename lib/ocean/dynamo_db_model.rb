@@ -18,6 +18,9 @@ class DynamoDbModel
     #include ActiveModel::MassAssignmentSecurity
     #require "active_model/mass_assignment_security.rb"
 
+    class RecordInvalid < StandardError; end
+    class RecordNotSaved < StandardError; end
+
 
     # ---------------------------------------------------------
     #
@@ -86,18 +89,26 @@ class DynamoDbModel
       if dynamo_table.exists?
         case dynamo_table.status
         when :active
+          set_dynamo_table_keys
           return true
         when :creating
           sleep 1 while dynamo_table.status == :creating
+          set_dynamo_table_keys
           return true
         when :deleting
           sleep 1 while dynamo_table.exists?
           return create_table
         else
-          raise "WEIRD"
+          raise "Unknown DynamoDB table status '#{dynamo_table.status}'"
         end
       end
       create_table
+    end
+
+
+    def self.set_dynamo_table_keys
+      dynamo_table.hash_key = [table_hash_key, fields[table_hash_key][:type]]
+      dynamo_table.range_key = [table_range_key, fields[table_range_key][:type]] if table_range_key
     end
 
 
@@ -128,6 +139,11 @@ class DynamoDbModel
     # ---------------------------------------------------------
 
     define_model_callbacks :initialize, only: :after
+    define_model_callbacks :save
+    define_model_callbacks :create
+    define_model_callbacks :update
+    define_model_callbacks :destroy
+
 
 
     # ---------------------------------------------------------
@@ -150,6 +166,9 @@ class DynamoDbModel
     # ---------------------------------------------------------
 
     attr_reader :attributes
+    attr_reader :destroyed
+    attr_reader :new_record
+    attr_reader :persisted
 
 
     def initialize(attributes={})
@@ -159,10 +178,16 @@ class DynamoDbModel
           default = v[:default]
           default = default.call if default.is_a?(Proc)
           write_attribute(name, default) unless read_attribute(name)
-          self.class.class_eval "def #{name}(); read_attribute('#{name}'); end"
+          self.class.class_eval "def #{name}; read_attribute('#{name}'); end"
           self.class.class_eval "def #{name}=(value); write_attribute('#{name}', value); end"
+          if fields[name][:type] == :boolean
+            self.class.class_eval "def #{name}?; read_attribute('#{name}'); end"
+          end
         end
         super
+        @destroyed = false
+        @new_record = true
+        @persisted = false
         raise "No primary_key declared" unless table_hash_key
       end
     end
@@ -201,10 +226,61 @@ class DynamoDbModel
     end
 
 
-    def save
-      save_or_update
+    def destroyed?
+      @destroyed
     end
 
+    def new_record?
+      @new_record
+    end
+
+    def persisted?
+      @persisted
+    end
+
+
+    def save
+      run_callbacks :save do
+        begin
+          create_or_update
+        rescue RecordInvalid
+          false
+        end
+      end
+    end
+
+    def save!(*)
+      create_or_update || raise(RecordNotSaved)
+    end
+
+    def create_or_update
+      result = new_record? ? create : update
+      result != false
+    end
+
+    def create
+      run_callbacks :create do
+
+      end
+    end
+
+    def update
+      run_callbacks :update do
+
+      end
+    end
+
+    def destroy
+      run_callbacks :destroy do
+        unless new_record?
+          # Delete the record here
+
+        end
+
+        @destroyed = true
+        freeze
+      end
+    end
   end
 
 

@@ -115,17 +115,15 @@ describe CloudModel do
   end
 
 
-  it "should set the values supplied in the call to new" do
+  it "should assign the fields values supplied in the call to new" do
     i = CloudModel.new uuid: "Barack-Obladiobladama", created_by: "http://somewhere"
     i.uuid.should == "Barack-Obladiobladama"
     i.created_by.should == "http://somewhere"
   end
 
-  it "should set defaults for value not supplied in the call to new" do
+  it "should set defaults for field values not supplied in the call to new" do
     i = CloudModel.new
-    i.steps.should == []
-    j = CloudModel.new steps: [{}, {}, {}]
-    j.steps.should_not == []
+    i.default_poison_limit.should == 5
   end
 
 
@@ -146,6 +144,18 @@ describe CloudModel do
   it "should have string keys" do
     CloudModel.new.attributes.should include 'uuid'
     CloudModel.new.attributes.should include 'created_at'
+  end
+
+
+  it "to_key should return nil when the instance hasn't been persisted" do
+    CloudModel.any_instance.should_receive(:persisted?).and_return(false)
+    CloudModel.new.to_key.should == nil
+  end
+
+  it "to_key should return an array of the present index key when the instance has been persisted" do
+    CloudModel.any_instance.should_receive(:persisted?).and_return(true)
+    i = CloudModel.new
+    i.to_key.should == [i.uuid]
   end
 
 end
