@@ -19,12 +19,24 @@ class DynamoDbModel
     #require "active_model/mass_assignment_security.rb"
 
 
+    # ---------------------------------------------------------
+    #
+    #  Class variables and methods
+    #
+    # ---------------------------------------------------------
+
     class_attribute :dynamo_client, instance_writer: false
-    self.dynamo_client ||= AWS::DynamoDB.new
-
-
+    class_attribute :dynamo_table, instance_writer: false
 
     class_attribute :table_name, instance_writer: false
+    class_attribute :table_name_prefix, instance_writer: false
+    class_attribute :table_name_suffix, instance_writer: false
+
+    class_attribute :table_hash_key, instance_writer: false
+    class_attribute :table_range_key, instance_writer: false
+
+    class_attribute :fields, instance_writer: false
+
 
     def self.set_table_name(name)
       self.table_name = name
@@ -34,16 +46,11 @@ class DynamoDbModel
       name.pluralize.underscore
     end
 
-    class_attribute :table_name_prefix, instance_writer: false
-    class_attribute :table_name_suffix, instance_writer: false
 
     def self.table_full_name
       "#{table_name_prefix}#{table_name}#{table_name_suffix}"
     end
 
-
-    class_attribute :table_hash_key, instance_writer: false
-    class_attribute :table_range_key, instance_writer: false
 
     def self.primary_key(hash_key, range_key=nil)
       self.table_hash_key = hash_key
@@ -54,23 +61,72 @@ class DynamoDbModel
     end
 
 
-
-    class_attribute :fields, instance_writer: false
-    self.fields = Hash.new
-
-    attr_reader :attributes
-
-
     def self.field(name, type=:string, **pairs)
       attr_accessor name
       fields[name] = {type:    type, 
                       default: pairs[:default]}
     end
 
+
+    def self.establish_db_connection
+      self.dynamo_client = AWS::DynamoDB.new
+      self.dynamo_table = dynamo_client.tables[table_full_name]
+      if dynamo_table.exists?
+        case dynamo_table.status
+        when :active
+          return true
+        when :creating
+          sleep 1 while dynamo_table.status == :creating
+          return true
+        when :deleting
+          sleep 1 while dynamo_table.exists?
+          return create_table
+        else
+          raise "WEIRD"
+        end
+      end
+      create_table
+    end
+
+
+    def self.create_table
+      self.dynamo_table = dynamo_client.tables.create(
+        table_full_name, 
+        10, 5,
+        hash_key: { table_hash_key => fields[table_hash_key][:type]},
+        range_key: table_range_key && { table_range_key => fields[table_range_key][:type]}
+        )
+      sleep 1 while dynamo_table.status == :creating
+      true
+    end
+
+
+    # ---------------------------------------------------------
+    #
+    #  Callbacks
+    #
+    # ---------------------------------------------------------
+
+    define_model_callbacks :initialize, only: :after
+
+
+    # ---------------------------------------------------------
+    #
+    #  Class initialisation, done once at load time
+    #
+    # ---------------------------------------------------------
+
+    self.fields = HashWithIndifferentAccess.new
     DEFAULT_FIELDS.each { |k, name, **pairs| Base.field k, name, **pairs }
 
 
-    define_model_callbacks :initialize, only: :after
+    # ---------------------------------------------------------
+    #
+    #  Instance variables and methods
+    #
+    # ---------------------------------------------------------
+
+    attr_reader :attributes
 
 
     def initialize(attributes={})
