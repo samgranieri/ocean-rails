@@ -17,12 +17,12 @@ class DynamoDbModel
     #require "active_model/mass_assignment_security.rb"
 
 
-    class_attribute :hash_key
-    class_attribute :range_key
+    class_attribute :table_hash_key
+    class_attribute :table_range_key
 
     def self.primary_key(hash_key, range_key=nil)
-      self.hash_key = hash_key
-      self.range_key = range_key
+      self.table_hash_key = hash_key
+      self.table_range_key = range_key
     end
 
 
@@ -64,16 +64,16 @@ class DynamoDbModel
     end
 
     def write_attribute(name, value)
-      @attributes[name.to_s] = value
+      @attributes[name] = value
     end
 
 
     def id
-      read_attribute(hash_key)
+      read_attribute(table_hash_key)
     end
 
     def id=(value)
-      write_attribute(hash_key, value)
+      write_attribute(table_hash_key, value)
     end
 
 
@@ -89,6 +89,11 @@ class DynamoDbModel
       values.each do |k, v|
         send("#{k}=", v)
       end
+    end
+
+
+    def save
+      save_or_update
     end
 
   end

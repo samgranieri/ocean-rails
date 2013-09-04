@@ -54,6 +54,10 @@ class CloudModel < DynamoDbModel::Base
     j.destroy_at ||= Time.now.utc + j.max_seconds_in_queue
   end
 
+  after_validation do |j|
+    j.default_step_time = j.default_step_time * 2   # Just for testing
+  end
+
   # after_create do |j|
   #   j.enqueue unless j.steps == []
   # end

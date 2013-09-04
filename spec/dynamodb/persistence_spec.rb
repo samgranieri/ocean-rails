@@ -3,6 +3,11 @@ require 'spec_helper'
 
 describe CloudModel do
 
+  before :each do
+    @i = CloudModel.new
+  end
+
+
   it "should have a class method create"
 
   it "should have an instance method create_or_update"
@@ -21,7 +26,9 @@ describe CloudModel do
 
   it "should have a method reload"
 
-  it "should have a method save"
+  it "should have a method save" do
+    @i.should respond_to :save
+  end
 
   it "should have a method save!"
 

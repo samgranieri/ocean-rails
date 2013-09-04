@@ -11,11 +11,11 @@ describe CloudModel do
 
 
   it "should have a class method hash_key" do
-    CloudModel.hash_key.should == :uuid
+    CloudModel.table_hash_key.should == :uuid
   end
 
   it "should have a class method hash_key" do
-    CloudModel.range_key.should == false
+    CloudModel.table_range_key.should == false
   end
 
 
@@ -81,7 +81,6 @@ describe CloudModel do
     i.token.should == "changed"
     i.default_poison_limit.should == 10
   end
-
 
 
   it "should set the values supplied in the call to new" do

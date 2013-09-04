@@ -14,7 +14,12 @@ describe CloudModel do
     i.destroy_at.should be_a Time
   end
 
-  it "should support the after_validation callback"
+  it "should support the after_validation callback" do
+    i = CloudModel.new
+    i.default_step_time.should == 30
+    i.valid?
+    i.default_step_time.should == 60
+  end
 
   it "should support the before_save callback"
 
