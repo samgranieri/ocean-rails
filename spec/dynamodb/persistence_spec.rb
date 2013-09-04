@@ -39,7 +39,4 @@ describe CloudModel do
 
   it "should have a method update_attributes!"
 
-  it "should have a method assign_attributes"
-
-
 end

@@ -75,6 +75,14 @@ describe CloudModel do
     i.token.should == "foo"
   end
 
+  it "should have a method assign_attributes" do
+    i = CloudModel.new
+    i.assign_attributes token: "changed", default_poison_limit: 10
+    i.token.should == "changed"
+    i.default_poison_limit.should == 10
+  end
+
+
 
   it "should set the values supplied in the call to new" do
     i = CloudModel.new uuid: "Barack-Obladiobladama", created_by: "http://somewhere"

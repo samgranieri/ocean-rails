@@ -46,25 +46,36 @@ class DynamoDbModel
 
     def initialize(attributes={})
       run_callbacks :initialize do
-        @attributes = {}
+        @attributes = HashWithIndifferentAccess.new
         fields.each do |name, v| 
           default = v[:default]
-          @attributes[name.to_s] ||= default.is_a?(Proc) ? default.call : default
-          self.class.class_eval "def #{name}(); @attributes['#{name}']; end"
-          self.class.class_eval "def #{name}=(v); @attributes['#{name}'] = v; end"
+          default = default.call if default.is_a?(Proc)
+          write_attribute(name, default) unless read_attribute(name)
+          self.class.class_eval "def #{name}(); read_attribute('#{name}'); end"
+          self.class.class_eval "def #{name}=(value); write_attribute('#{name}', value); end"
         end
         super
       end
     end
 
 
+    def read_attribute(name)
+      @attributes[name]
+    end
+
+    def write_attribute(name, value)
+      @attributes[name.to_s] = value
+    end
+
+
     def id
-      @attributes[hash_key.to_s]
+      read_attribute(hash_key)
     end
 
     def id=(value)
-      @attributes[hash_key.to_s] = value
+      write_attribute(hash_key, value)
     end
+
 
     def to_key
       return nil unless persisted?
@@ -74,8 +85,8 @@ class DynamoDbModel
 
 
 
-    def assign_attributes(values, options = {})
-      sanitize_for_mass_assignment(values, options[:as]).each do |k, v|
+    def assign_attributes(values)
+      values.each do |k, v|
         send("#{k}=", v)
       end
     end
