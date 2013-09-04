@@ -21,7 +21,12 @@ describe CloudModel do
     i.default_step_time.should == 60
   end
 
-  it "should support the after_commit callback"
+  it "should support the after_commit callback" do
+    i = CloudModel.new
+    i.started_at.should == nil
+    i.save!
+    i.started_at.should be_a Time
+  end
 
   it "should support the after_find callback"
 

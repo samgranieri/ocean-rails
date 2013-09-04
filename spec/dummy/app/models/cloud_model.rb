@@ -68,5 +68,9 @@ class CloudModel < DynamoDbModel::Base
     #model.ban
   end
 
+  after_commit do |model|
+    model.started_at = Time.now
+  end
+
 
 end

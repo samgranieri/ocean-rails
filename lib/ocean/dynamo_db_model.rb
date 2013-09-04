@@ -147,6 +147,7 @@ module DynamoDbModel
     define_model_callbacks :create
     define_model_callbacks :update
     define_model_callbacks :destroy
+    define_model_callbacks :commit, only: :after
 
 
 
@@ -256,35 +257,43 @@ module DynamoDbModel
     end
 
     def create_or_update
-      run_callbacks :save do
-        result = new_record? ? create : update
-        result != false
-      end
+      result = new_record? ? create : update
+      result != false
     end
 
     def create
-      run_callbacks :create do
+      run_callbacks :save do
+        run_callbacks :create do
+          run_callbacks :commit do
 
-        true
+            true
+          end
+        end
       end
     end
 
     def update
-      run_callbacks :update do
+      run_callbacks :save do
+        run_callbacks :update do
+          run_callbacks :commit do
 
-        true
+            true
+          end
+        end
       end
     end
 
     def destroy
       run_callbacks :destroy do
-        unless new_record?
-          # Delete the record here
+        run_callbacks :commit do
+          unless new_record?
+            # Delete the record here
 
+          end
+
+          @destroyed = true
+          freeze
         end
-
-        @destroyed = true
-        freeze
       end
     end
   end
