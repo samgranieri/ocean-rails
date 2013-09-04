@@ -1,7 +1,7 @@
 
 require "aws-sdk"
 
-class DynamoDbModel
+module DynamoDbModel
 
   DEFAULT_FIELDS = [
     [:created_at,   :datetime], 
@@ -10,7 +10,7 @@ class DynamoDbModel
   ]
 
   class DynamoDbError < StandardError; end
-  
+
   class RecordInvalid < DynamoDbError; end
   class RecordNotSaved < DynamoDbError; end
 
