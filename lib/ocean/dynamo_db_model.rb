@@ -11,6 +11,8 @@ module DynamoDbModel
 
   class DynamoDbError < StandardError; end
 
+  class NoPrimaryKeyDeclared < DynamoDbError; end
+  class UnknownTableStatus < DynamoDbError; end
   class RecordInvalid < DynamoDbError; end
   class RecordNotSaved < DynamoDbError; end
 
@@ -101,7 +103,7 @@ module DynamoDbModel
           sleep 1 while dynamo_table.exists?
           return create_table
         else
-          raise "Unknown DynamoDB table status '#{dynamo_table.status}'"
+          raise UnknownTableStatus.new("Unknown DynamoDB table status '#{dynamo_table.status}'")
         end
       end
       create_table
@@ -190,7 +192,7 @@ module DynamoDbModel
         @destroyed = false
         @new_record = true
         @persisted = false
-        raise "No primary_key declared" unless table_hash_key
+        raise NoPrimaryKeyDeclared unless table_hash_key
       end
     end
 

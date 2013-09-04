@@ -105,7 +105,8 @@ describe CloudModel do
     AWS::DynamoDB::Table.any_instance.should_receive(:exists?).and_return(true)
     AWS::DynamoDB::Table.any_instance.should_receive(:status).twice.and_return(:syphilis)
     CloudModel.should_not_receive(:create_table)
-    expect { CloudModel.establish_db_connection }.to raise_error
+    expect { CloudModel.establish_db_connection }. 
+      to raise_error(DynamoDbModel::UnknownTableStatus, "Unknown DynamoDB table status 'syphilis'")
   end
 
   it "create_table should try to create the table if it doesn't exist" do
