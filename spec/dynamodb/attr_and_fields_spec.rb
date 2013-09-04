@@ -13,6 +13,10 @@ describe CloudModel do
     CloudModel.fields.should include :id
   end
 
+  it "should be possible to override the id field name"
+
+  it "should be possible to refer to the id field using #id, regardless of its field name"
+
   it "class should have an automatically supplied created_at field" do
     CloudModel.fields.should include :created_at
   end

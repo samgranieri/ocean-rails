@@ -15,10 +15,10 @@ class CloudModel < DynamoDbModel::Base
   field :destroy_at,           :datetime
   field :started_at,           :datetime
   field :last_completed_step,  :integer
-  field :finished_at,          :datetime
   field :succeeded,            :boolean,     default: false
   field :failed,               :boolean,     default: false
   field :poison,               :boolean,     default: false
+  field :finished_at,          :datetime
 
 
   # # Attributes
@@ -52,7 +52,7 @@ class CloudModel < DynamoDbModel::Base
   end
 
   before_validation do |j| 
-    j.destroy_at ||= Time.now.utc + 1.day
+    j.destroy_at ||= Time.now.utc + j.max_seconds_in_queue
   end
 
   # after_create do |j|
