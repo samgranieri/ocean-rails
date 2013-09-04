@@ -9,13 +9,29 @@ describe CloudModel do
     CloudModel.new.should be_a CloudModel
   end
 
-  it "class should have an automatically supplied id field" do
-    CloudModel.fields.should include :id
+
+  it "should have a class method hash_key" do
+    CloudModel.hash_key.should == :uuid
   end
 
-  it "should be possible to override the id field name"
+  it "should have a class method hash_key" do
+    CloudModel.range_key.should == false
+  end
 
-  it "should be possible to refer to the id field using #id, regardless of its field name"
+
+  it "should be possible to refer to the hash_key field using #id, regardless of its name" do
+    i = CloudModel.new uuid: "blahonga"
+    i.uuid.should == "blahonga"
+    i.id.should == "blahonga"
+  end
+
+  it "should be possible to set the hash_key field using #id, regardless of its name" do
+    i = CloudModel.new uuid: "blahonga"
+    i.id.should == "blahonga"
+    i.id = "snyko"
+    i.uuid.should == "snyko"
+  end
+
 
   it "class should have an automatically supplied created_at field" do
     CloudModel.fields.should include :created_at
@@ -24,6 +40,7 @@ describe CloudModel do
   it "class should have an automatically supplied updated_at field" do
     CloudModel.fields.should include :updated_at
   end
+
 
   it "should have a :token field" do
     CloudModel.fields.should include :token

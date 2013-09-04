@@ -1,7 +1,6 @@
 class CloudModel < DynamoDbModel::Base
 
-  # field :name
-  # field :weight,     :float
+  primary_key :uuid, false
 
   field :uuid,                 :string,      default: lambda { SecureRandom.uuid }
   field :credentials,          :string,      default: ""

@@ -4,6 +4,7 @@ class AsyncJob < DynamoDbModel::Base
                        invalidate_member: [],
                        invalidate_collection: []
 
+  primary_key :uuid
 
   field :uuid,                 :string,      default: lambda { SecureRandom.uuid }
   field :credentials,          :string,      default: ""
@@ -21,8 +22,6 @@ class AsyncJob < DynamoDbModel::Base
   field :succeeded,            :boolean,     default: false
   field :failed,               :boolean,     default: false
   field :poison,               :boolean,     default: false
-
-
 
 
   @@queue = nil

@@ -2,7 +2,6 @@
 class DynamoDbModel
 
   DEFAULT_FIELDS = [
-    [:id,           :string], 
     [:created_at,   :datetime], 
     [:updated_at,   :datetime],
     [:lock_version, :integer, default: 0]
@@ -17,14 +16,14 @@ class DynamoDbModel
     #include ActiveModel::MassAssignmentSecurity
     #require "active_model/mass_assignment_security.rb"
 
-    # extend ActiveSupport::Concern
-    
-    # included do
-    # end
-    
-    # module ClassMethods
-    # end
 
+    class_attribute :hash_key
+    class_attribute :range_key
+
+    def self.primary_key(hash_key, range_key=nil)
+      self.hash_key = hash_key
+      self.range_key = range_key
+    end
 
 
     class_attribute :fields
@@ -49,13 +48,30 @@ class DynamoDbModel
       run_callbacks :initialize do
         @attributes = {}
         fields.each do |name, v| 
-          @attributes[name.to_s] ||= v[:default].is_a?(Proc) ? v[:default].call : v[:default]
+          default = v[:default]
+          @attributes[name.to_s] ||= default.is_a?(Proc) ? default.call : default
           self.class.class_eval "def #{name}(); @attributes['#{name}']; end"
           self.class.class_eval "def #{name}=(v); @attributes['#{name}'] = v; end"
         end
         super
       end
     end
+
+
+    def id
+      @attributes[hash_key.to_s]
+    end
+
+    def id=(value)
+      @attributes[hash_key.to_s] = value
+    end
+
+    def to_key
+      return nil unless persisted?
+      key = respond_to?(:id) && id
+      key ? [key] : nil
+    end
+
 
 
     def assign_attributes(values, options = {})
