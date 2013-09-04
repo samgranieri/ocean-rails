@@ -9,6 +9,9 @@ class DynamoDbModel
     [:lock_version, :integer, default: 0]
   ]
 
+  class RecordInvalid < StandardError; end
+  class RecordNotSaved < StandardError; end
+
 
   class Base
 
@@ -17,9 +20,6 @@ class DynamoDbModel
     #include ActiveModel::Dirty          # We don't get this to work. Grrr.
     #include ActiveModel::MassAssignmentSecurity
     #require "active_model/mass_assignment_security.rb"
-
-    class RecordInvalid < StandardError; end
-    class RecordNotSaved < StandardError; end
 
 
     # ---------------------------------------------------------
@@ -240,12 +240,10 @@ class DynamoDbModel
 
 
     def save
-      run_callbacks :save do
-        begin
-          create_or_update
-        rescue RecordInvalid
-          false
-        end
+      begin
+        create_or_update
+      rescue RecordInvalid
+        false
       end
     end
 
@@ -254,19 +252,23 @@ class DynamoDbModel
     end
 
     def create_or_update
-      result = new_record? ? create : update
-      result != false
+      run_callbacks :save do
+        result = new_record? ? create : update
+        result != false
+      end
     end
 
     def create
       run_callbacks :create do
 
+        true
       end
     end
 
     def update
       run_callbacks :update do
 
+        true
       end
     end
 
