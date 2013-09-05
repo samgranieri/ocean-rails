@@ -98,14 +98,22 @@ module DynamoDbModel
       self.dynamo_table = dynamo_client.tables[table_full_name]
       self.dynamo_items = dynamo_table.items
       if dynamo_table.exists?
+        wait_until_table_is_active
+      else
+        create_table
+      end
+    end
+
+
+    def self.wait_until_table_is_active
+      loop do
         case dynamo_table.status
         when :active
           set_dynamo_table_keys
-          return true
-        when :creating
-          sleep 1 while dynamo_table.status == :creating
-          set_dynamo_table_keys
-          return true
+          return
+        when :updating, :creating
+          sleep 1
+          next
         when :deleting
           sleep 1 while dynamo_table.exists?
           create_table
@@ -113,8 +121,8 @@ module DynamoDbModel
         else
           raise UnknownTableStatus.new("Unknown DynamoDB table status '#{dynamo_table.status}'")
         end
+        sleep 1
       end
-      create_table
     end
 
 
@@ -129,7 +137,7 @@ module DynamoDbModel
         table_read_capacity_units, table_write_capacity_units,
         hash_key: { table_hash_key => fields[table_hash_key][:type]},
         range_key: table_range_key && { table_range_key => fields[table_range_key][:type]})
-      sleep 1 while dynamo_table.status == :creating
+      sleep 1 until dynamo_table.status == :active
       true
     end
 

@@ -98,7 +98,7 @@ describe CloudModel do
     @i.destroy
   end
 
-  it "destroy should attempt to delete a DynamoDB object when the instance has been persisted" do
+  it "destroy should attempt to delete a DynamoDB object only if the instance has been persisted" do
     @i.save!
     @i.dynamo_item.should be_an AWS::DynamoDB::Item
     @i.dynamo_item.should_receive(:delete)
@@ -194,15 +194,6 @@ describe CloudModel do
     i.dynamo_item.exists?.should == false
     CloudModel.delete(i.id).should == false
   end
-
-
-  it "should have a method increment"
-  it "should have a method increment!"
-
-  it "should have a method decrement"
-  it "should have a method decrement!"
-
-
 
 
 

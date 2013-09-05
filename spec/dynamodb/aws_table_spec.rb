@@ -84,7 +84,7 @@ describe CloudModel do
     AWS::DynamoDB::Table.any_instance.should_receive(:exists?).and_return(true)
     AWS::DynamoDB::Table.any_instance.should_receive(:status).
       and_return(:creating, :creating, :creating, :creating, :active)
-    Object.should_receive(:sleep).with(1).exactly(3).times
+    Object.should_receive(:sleep).with(1).exactly(4).times
     CloudModel.should_not_receive(:create_table)
     CloudModel.establish_db_connection
   end
