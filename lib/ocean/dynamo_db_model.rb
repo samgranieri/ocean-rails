@@ -137,6 +137,22 @@ module DynamoDbModel
     end
 
 
+    def self.create(attributes = nil, &block)
+      object = new(attributes)
+      yield(object) if block_given?
+      object.save
+      object
+    end
+
+
+    def self.create!(attributes = nil, &block)
+      object = new(attributes)
+      yield(object) if block_given?
+      object.save!
+      object
+    end
+
+
     # ---------------------------------------------------------
     #
     #  Callbacks
@@ -174,7 +190,6 @@ module DynamoDbModel
     attr_reader :attributes
     attr_reader :destroyed
     attr_reader :new_record
-    attr_reader :persisted
     attr_reader :dynamo_item
 
 
@@ -195,7 +210,6 @@ module DynamoDbModel
         @dynamo_item = nil
         @destroyed = false
         @new_record = true
-        @persisted = false
         raise NoPrimaryKeyDeclared unless table_hash_key
       end
     end
@@ -242,11 +256,11 @@ module DynamoDbModel
       result
     end
 
-    def serialize_attribute(attribute, value)
+    def serialize_attribute(attribute, value, 
+                            metadata=fields[attribute])
       return nil if value == nil
-      field = fields[attribute]
-      type = field[:type]
-      default = field[:type]
+      type = metadata[:type]
+      default = metadata[:default]
       case type
       when :string
         value == "" ? nil : value
@@ -275,7 +289,7 @@ module DynamoDbModel
     end
 
     def persisted?
-      @persisted
+      !(new_record? || destroyed?)
     end
 
 
@@ -303,7 +317,12 @@ module DynamoDbModel
       run_callbacks :commit do
         run_callbacks :save do
           run_callbacks :create do
-            @dynamo_item = dynamo_items.create(serialized_attributes)
+            return false unless valid?
+            t = Time.now
+            self.created_at ||= t
+            self.updated_at ||= t
+            @dynamo_item = dynamo_items.put(serialized_attributes)
+            @new_record = false
             true
           end
         end
@@ -315,7 +334,10 @@ module DynamoDbModel
       run_callbacks :commit do
         run_callbacks :save do
           run_callbacks :update do
-
+            return false unless valid?
+            self.updated_at = Time.now
+            @dynamo_item = dynamo_items.put(serialized_attributes)
+            @new_record = false
             true
           end
         end
@@ -327,10 +349,8 @@ module DynamoDbModel
       run_callbacks :commit do
         run_callbacks :destroy do
           unless new_record?
-            # Delete the record here
-
+            @dynamo_item.delete
           end
-
           @destroyed = true
           freeze
         end
