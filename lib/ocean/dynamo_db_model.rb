@@ -171,14 +171,6 @@ module DynamoDbModel
     end
 
 
-    def reload(**keywords)
-      range_key = table_range_key && attributes[table_range_key]
-      new_instance = self.class.find(id, range_key, **keywords)
-      assign_attributes(new_instance.attributes)
-      self
-    end
-
-
     # ---------------------------------------------------------
     #
     #  Callbacks
@@ -192,6 +184,7 @@ module DynamoDbModel
     define_model_callbacks :destroy
     define_model_callbacks :commit, only: :after
     define_model_callbacks :find, only: :after
+    define_model_callbacks :touch
 
 
 
@@ -239,6 +232,16 @@ module DynamoDbModel
         @new_record = true
         raise NoPrimaryKeyDeclared unless table_hash_key
       end
+    end
+
+
+    def [](attribute)
+      read_attribute attribute
+    end
+
+
+    def []=(attribute, value)
+      write_attribute attribute, value
     end
 
 
@@ -439,6 +442,31 @@ module DynamoDbModel
           @destroyed = true
           freeze
         end
+      end
+    end
+
+
+    def reload(**keywords)
+      range_key = table_range_key && attributes[table_range_key]
+      new_instance = self.class.find(id, range_key, **keywords)
+      assign_attributes(new_instance.attributes)
+      self
+    end
+
+
+    def touch(name=nil)
+      run_callbacks :touch do
+        attrs = [:updated_at]
+        attrs << name if name
+        t = Time.now
+        attrs.each { |k| write_attribute name, t }
+        # TODO: handle lock_version
+        dynamo_item.attributes.update do |u|
+          attrs.each do |k|
+            u.set(k => serialize_attribute(k, t))
+          end
+        end
+        self
       end
     end
 

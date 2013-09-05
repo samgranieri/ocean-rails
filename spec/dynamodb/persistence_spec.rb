@@ -174,6 +174,21 @@ describe CloudModel do
     expect { @i.update_attributes!(uuid: nil) }.to raise_error
   end
 
+  it "should implement touch" do
+    i = CloudModel.new
+    i.save!
+    ca = i.created_at.to_f
+    ua = i.created_at.to_f
+    ca.should == ua
+    i.touch(:started_at)
+    i.started_at.should be_a Time
+    i.started_at.to_f.should_not == ca
+    i.started_at.to_f.should_not == ua
+    i.reload consistent: true
+    i.started_at.should be_a Time
+    i.started_at.to_f.should_not == ca
+    i.started_at.to_f.should_not == ua
+  end
 
 
 

@@ -75,7 +75,11 @@ class CloudModel < DynamoDbModel::Base
   end
 
   after_find do |model|
-    puts "HOHOHOHOHOHOHOHOHOHOHO"
+
+  end
+
+  after_touch do |model|
+
   end
 
 end

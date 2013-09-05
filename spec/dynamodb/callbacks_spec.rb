@@ -34,18 +34,11 @@ describe CloudModel do
   it "should support the after_commit callback" do
     # CloudModel.dynamo_table.should_receive(:exists?).and_return(false)
     # CloudModel.should_receive(:create_table)
-    CloudModel.establish_db_connection
     i = CloudModel.new uuid: "same-uuid-as-always"
     # i.dynamo_items.should_receive(:create)
     i.started_at.should == nil
     i.save!
     i.started_at.should be_a Time
   end
-
-  it "should support the touch callback"
-
-
-
-
 
 end

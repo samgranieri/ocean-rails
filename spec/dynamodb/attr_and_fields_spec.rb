@@ -158,4 +158,18 @@ describe CloudModel do
     i.to_key.should == [i.uuid]
   end
 
+  it "@i[:foo] and @i['foo'] should be equivalent to @i.foo" do
+    i = CloudModel.new uuid: "trala"
+    i[:uuid].should == "trala"
+    i['uuid'].should == "trala"
+  end
+
+  it "@i[:foo]= and @i['foo']= should be equivalent to @i.foo=" do
+    i = CloudModel.new uuid: "trala"
+    i[:uuid] = "wow"
+    i[:uuid].should == "wow"
+    i['uuid'] = "yowza"
+    i['uuid'].should == "yowza"
+  end
+
 end
