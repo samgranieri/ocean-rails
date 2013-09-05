@@ -175,6 +175,7 @@ module DynamoDbModel
       range_key = table_range_key && attributes[table_range_key]
       new_instance = self.class.find(id, range_key, **keywords)
       assign_attributes(new_instance.attributes)
+      self
     end
 
 

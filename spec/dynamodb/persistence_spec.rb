@@ -33,7 +33,7 @@ describe CloudModel do
     @i.update_attributes gratuitous_float: 3333.3333
     @i.gratuitous_float.should == 3333.3333
     @i.gratuitous_float = 0.0
-    @i.reload consistent: true
+    @i.reload(consistent: true).should == @i
     @i.gratuitous_float.should == 3333.3333
   end
 
