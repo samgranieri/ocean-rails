@@ -42,8 +42,6 @@ describe CloudModel do
     i.started_at.should be_a Time
   end
 
-  it "should support the after_find callback"
-
   it "should support the touch callback"
 
 

@@ -13,9 +13,10 @@ module DynamoDbModel
 
   class NoPrimaryKeyDeclared < DynamoDbError; end
   class UnknownTableStatus < DynamoDbError; end
+  class UnsupportedType < DynamoDbError; end
   class RecordInvalid < DynamoDbError; end
   class RecordNotSaved < DynamoDbError; end
-  class UnsupportedType < DynamoDbError; end
+  class RecordNotFound < DynamoDbError; end
 
 
   class Base
@@ -54,6 +55,7 @@ module DynamoDbModel
       self.table_name = name
     end
 
+
     def self.compute_table_name
       name.pluralize.underscore
     end
@@ -76,6 +78,7 @@ module DynamoDbModel
     def self.read_capacity_units(units)
       self.table_read_capacity_units = units
     end
+
 
     def self.write_capacity_units(units)
       self.table_write_capacity_units = units
@@ -153,6 +156,20 @@ module DynamoDbModel
     end
 
 
+    def self.find(hash, range=nil, consistent: false)
+      item = dynamo_items[hash, range]
+      raise RecordNotFound unless item.exists?
+      f = new
+      f.instance_variable_set(:@dynamo_item, item)
+      f.instance_variable_set(:@new_record, false)
+      f.assign_attributes(f.deserialized_attributes(
+         hash: nil,
+         consistent_read: consistent)
+        )
+      f
+    end
+
+
     # ---------------------------------------------------------
     #
     #  Callbacks
@@ -165,6 +182,7 @@ module DynamoDbModel
     define_model_callbacks :update
     define_model_callbacks :destroy
     define_model_callbacks :commit, only: :after
+    define_model_callbacks :find, only: :after
 
 
 
@@ -219,6 +237,7 @@ module DynamoDbModel
       @attributes[name]
     end
 
+
     def write_attribute(name, value)
       @attributes[name] = value
     end
@@ -227,6 +246,7 @@ module DynamoDbModel
     def id
       read_attribute(table_hash_key)
     end
+
 
     def id=(value)
       write_attribute(table_hash_key, value)
@@ -247,6 +267,7 @@ module DynamoDbModel
       end
     end
 
+
     def serialized_attributes
       result = {}
       attributes.each do |k, v|
@@ -255,6 +276,7 @@ module DynamoDbModel
       end
       result
     end
+
 
     def serialize_attribute(attribute, value, 
                             metadata=fields[attribute])
@@ -269,7 +291,7 @@ module DynamoDbModel
       when :float
         value
       when :boolean
-        value ? 1 : 0
+        value ? "true" : "false"
       when :datetime
         value.to_i
       when :serialized
@@ -280,13 +302,55 @@ module DynamoDbModel
     end
 
 
+    def deserialized_attributes(consistent_read: false, hash: nil)
+      hash ||= dynamo_item.attributes.to_hash(consistent_read: consistent_read)
+      result = {}
+      fields.each do |k, v|
+        result[k] = deserialize_attribute hash[k], v
+      end
+      result
+    end
+
+
+    def deserialize_attribute(value, metadata, 
+                              type: metadata[:type], 
+                              default: metadata[:default])
+      return default if value == nil && default != nil
+      case type
+      when :string
+        value == nil ? '' : value
+      when :integer
+        value == nil ? nil : value.to_i
+      when :float
+        value == nil ? nil : value.to_f
+      when :boolean
+        case value
+        when "true"
+          true
+        when "false"
+          false
+        else
+          nil
+        end
+      when :datetime
+        value == nil ? nil : Time.at(value.to_i)
+      when :serialized
+        value == nil ? nil : JSON.parse(value)
+      else
+        raise UnsupportedType.new(type.to_s)
+      end
+    end
+
+
     def destroyed?
       @destroyed
     end
 
+
     def new_record?
       @new_record
     end
+
 
     def persisted?
       !(new_record? || destroyed?)
@@ -311,6 +375,7 @@ module DynamoDbModel
       assign_attributes(attributes)
       save
     end
+
 
     def update_attributes!(attributes={})
       assign_attributes(attributes)
@@ -367,6 +432,8 @@ module DynamoDbModel
         end
       end
     end
+
+
   end
 
 

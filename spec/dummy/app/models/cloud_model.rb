@@ -21,6 +21,7 @@ class CloudModel < DynamoDbModel::Base
   field :poison,               :boolean,     default: false
   field :finished_at,          :datetime
   field :gratuitous_float,     :float,       default: 3.141592
+  field :zalagadoola,          :string,      default: "Menchikaboola"
 
 
   # # Attributes
@@ -73,5 +74,8 @@ class CloudModel < DynamoDbModel::Base
     model.started_at = Time.now
   end
 
+  after_find do |model|
+    puts "HOHOHOHOHOHOHOHOHOHOHO"
+  end
 
 end
