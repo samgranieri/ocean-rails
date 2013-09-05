@@ -46,18 +46,27 @@ describe CloudModel do
       @i.deserialize_attribute(nil, {}, type: :string, default: "Chelsea").should == 'Chelsea'
     end
 
-    it "for :string should return a String" do
+    it "for :string should handle single strings" do
       @i.deserialize_attribute("hey", {}, type: :string).should == "hey"
     end
 
+    it "for :string should handle string sets" do
+      @i.deserialize_attribute(["one", "two", "three"], {}, type: :string).
+        should == ["one", "two", "three"]
+    end
 
     it "for :integer should return nil unless there is a default" do
       @i.deserialize_attribute(nil, {}, type: :integer).should == nil
       @i.deserialize_attribute(nil, {}, type: :integer, default: 25).should == 25
     end
 
-    it "for :integer should return an Integer" do
+    it "for :integer should handle single integers" do
       @i.deserialize_attribute(BigDecimal.new(1000), {}, type: :integer).should == 1000
+    end
+
+    it "for :integer should handle integer sets" do
+      @i.deserialize_attribute([BigDecimal.new(1), BigDecimal.new(2), BigDecimal.new(3)], {}, type: :integer).
+        should == [1, 2, 3]
     end
 
 
@@ -66,8 +75,13 @@ describe CloudModel do
       @i.deserialize_attribute(nil, {}, type: :float, default: 3.141592).should == 3.141592
     end
 
-    it "for :float should return a Float" do
+    it "for :float should handle single floats" do
       @i.deserialize_attribute(BigDecimal.new(1000), {}, type: :float).should == 1000.0
+    end
+
+    it "for :float should handle float sets" do
+      @i.deserialize_attribute([BigDecimal.new("1.1"),BigDecimal.new("2.2"),BigDecimal.new("3.3")], {}, type: :float).
+        should == [1.1, 2.2, 3.3]
     end
 
 

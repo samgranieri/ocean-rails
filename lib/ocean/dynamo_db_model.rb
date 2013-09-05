@@ -346,11 +346,14 @@ module DynamoDbModel
       return default if value == nil && default != nil
       case type
       when :string
-        value == nil ? '' : value
+        return "" if value == nil
+        value
       when :integer
-        value == nil ? nil : value.to_i
+        return nil if value == nil
+        value.is_a?(Array) ? value.collect(&:to_i) : value.to_i
       when :float
-        value == nil ? nil : value.to_f
+        return nil if value == nil
+        value.is_a?(Array) ? value.collect(&:to_f) : value.to_f
       when :boolean
         case value
         when "true"
@@ -361,9 +364,11 @@ module DynamoDbModel
           nil
         end
       when :datetime
-        value == nil ? nil : Time.at(value.to_i)
+        return nil if value == nil
+        Time.at(value.to_i)
       when :serialized
-        value == nil ? nil : JSON.parse(value)
+        return nil if value == nil
+        JSON.parse(value)
       else
         raise UnsupportedType.new(type.to_s)
       end
