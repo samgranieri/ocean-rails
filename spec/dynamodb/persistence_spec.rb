@@ -37,17 +37,6 @@ describe CloudModel do
     @i.gratuitous_float.should == 3333.3333
   end
 
-  it "should have a method touch"
-
-
-  it "should have a method delete"
-
-  it "should have a method increment"
-  it "should have a method increment!"
-
-  it "should have a method decrement"
-  it "should have a method decrement!"
-
 
   it "serialize_attribute should barf on an unknown attribute type" do
     expect { @i.serialize_attribute :quux, 42, {type: :falafel, default: nil} }. 
@@ -116,9 +105,9 @@ describe CloudModel do
     @i.destroy
   end
 
-  it "should reset @new_record when an instance has been persisted" do
+  it "save should reset @new_record when an instance has been persisted" do
     @i.new_record?.should == true
-    @i.save!
+    @i.save
     @i.new_record?.should == false
   end
 
@@ -170,7 +159,7 @@ describe CloudModel do
     @i.finished_at.should be_a Time
   end
 
-  it "update_attributes should barf on an invalid record" do
+  it "update_attributes! should barf on an invalid record" do
     expect { @i.update_attributes!(uuid: nil) }.to raise_error
   end
 
@@ -189,6 +178,24 @@ describe CloudModel do
     i.started_at.to_f.should_not == ca
     i.started_at.to_f.should_not == ua
   end
+
+
+
+  it "should have an instance method delete" do
+    i = CloudModel.create!
+    i.delete
+    i.destroyed?.should == true
+  end
+
+
+  it "should have a class method delete"
+
+  it "should have a method increment"
+  it "should have a method increment!"
+
+  it "should have a method decrement"
+  it "should have a method decrement!"
+
 
 
 

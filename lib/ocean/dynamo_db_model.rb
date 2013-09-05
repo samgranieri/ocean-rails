@@ -436,13 +436,18 @@ module DynamoDbModel
     def destroy
       run_callbacks :commit do
         run_callbacks :destroy do
-          unless new_record?
-            @dynamo_item.delete
-          end
-          @destroyed = true
-          freeze
+          delete
         end
       end
+    end
+
+
+    def delete
+      unless new_record?
+        @dynamo_item.delete
+      end
+      @destroyed = true
+      freeze
     end
 
 
