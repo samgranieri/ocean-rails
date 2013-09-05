@@ -188,7 +188,13 @@ describe CloudModel do
   end
 
 
-  it "should have a class method delete"
+  it "should have a class method delete" do
+    i = CloudModel.create!
+    CloudModel.delete(i.id).should == true
+    i.dynamo_item.exists?.should == false
+    CloudModel.delete(i.id).should == false
+  end
+
 
   it "should have a method increment"
   it "should have a method increment!"

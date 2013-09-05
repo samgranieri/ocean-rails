@@ -171,6 +171,14 @@ module DynamoDbModel
     end
 
 
+    def self.delete(hash, range=nil)
+      item = dynamo_items[hash, range]
+      return false unless item.exists?
+      item.delete
+      true
+    end
+
+
     # ---------------------------------------------------------
     #
     #  Callbacks
@@ -443,7 +451,7 @@ module DynamoDbModel
 
 
     def delete
-      unless new_record?
+      if persisted?
         @dynamo_item.delete
       end
       @destroyed = true
