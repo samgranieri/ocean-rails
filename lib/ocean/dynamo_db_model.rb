@@ -307,6 +307,17 @@ module DynamoDbModel
     end
 
 
+    def update_attributes(attributes={})
+      assign_attributes(attributes)
+      save
+    end
+
+    def update_attributes!(attributes={})
+      assign_attributes(attributes)
+      save!
+    end
+
+
     def create_or_update
       result = new_record? ? create : update
       result != false

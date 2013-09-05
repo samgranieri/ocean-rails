@@ -33,8 +33,6 @@ describe CloudModel do
 
   it "should have a method touch"
 
-  it "should have a method update_attributes"
-  it "should have a method update_attributes!"
 
   it "should have a method delete"
 
@@ -138,12 +136,36 @@ describe CloudModel do
 
   it "should have a class method create" do
     i = CloudModel.create
-    i.should be_a CloudModel
+    i.persisted?.should == true
   end
 
   it "should have a class method create!" do
     i = CloudModel.create!
-    i.should be_a CloudModel
+    i.persisted?.should == true
+  end
+
+  it "should have a method update_attributes" do
+    @i.created_by.should == "Peter"
+    @i.finished_at.should == nil
+    @i.update_attributes(created_by: "Egon", finished_at: Time.now).should == true
+    @i.created_by.should == "Egon"
+    @i.finished_at.should be_a Time
+  end
+
+  it "update_attributes should not barf on an invalid record" do
+    @i.update_attributes(uuid: nil).should == false
+  end
+
+  it "should have a method update_attributes!" do
+    @i.created_by.should == "Peter"
+    @i.finished_at.should == nil
+    @i.update_attributes!(created_by: "Egon", finished_at: Time.now).should == true
+    @i.created_by.should == "Egon"
+    @i.finished_at.should be_a Time
+  end
+
+  it "update_attributes should barf on an invalid record" do
+    expect { @i.update_attributes!(uuid: nil) }.to raise_error
   end
 
 
