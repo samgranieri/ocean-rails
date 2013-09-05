@@ -29,7 +29,13 @@ describe CloudModel do
     @i.persisted?.should == false
   end
 
-  it "should have a method reload"
+  it "should have a method reload" do
+    @i.update_attributes gratuitous_float: 3333.3333
+    @i.gratuitous_float.should == 3333.3333
+    @i.gratuitous_float = 0.0
+    @i.reload consistent: true
+    @i.gratuitous_float.should == 3333.3333
+  end
 
   it "should have a method touch"
 
