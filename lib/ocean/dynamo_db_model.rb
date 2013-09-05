@@ -290,19 +290,19 @@ module DynamoDbModel
 
     def serialized_attributes
       result = {}
-      attributes.each do |k, v|
-        serialized = serialize_attribute k, v
-        result[k] = serialized unless serialized == nil
+      fields.each do |attribute, metadata|
+        serialized = serialize_attribute(attribute, read_attribute(attribute), metadata)
+        result[attribute] = serialized unless serialized == nil
       end
       result
     end
 
 
     def serialize_attribute(attribute, value, 
-                            metadata=fields[attribute])
+                            metadata=fields[attribute],
+                            type: metadata[:type],
+                            default: metadata[:default])
       return nil if value == nil
-      type = metadata[:type]
-      default = metadata[:default]
       case type
       when :string
         value == "" ? nil : value
@@ -325,8 +325,8 @@ module DynamoDbModel
     def deserialized_attributes(consistent_read: false, hash: nil)
       hash ||= dynamo_item.attributes.to_hash(consistent_read: consistent_read)
       result = {}
-      fields.each do |k, v|
-        result[k] = deserialize_attribute hash[k], v
+      fields.each do |attribute, metadata|
+        result[attribute] = deserialize_attribute(hash[attribute], metadata)
       end
       result
     end

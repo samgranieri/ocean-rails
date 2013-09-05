@@ -11,6 +11,9 @@ describe CloudModel do
     CloudModel.new.lock_version.should == 0
   end
 
-  it "should use :lock_version for optimistic locking"
+
+  it "should use optimistic locking in update"
+  it "should use optimistic locking in destroy"
+  it "should use optimistic locking in touch"
 
 end
