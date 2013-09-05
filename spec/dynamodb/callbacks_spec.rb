@@ -3,6 +3,16 @@ require 'spec_helper'
 
 describe CloudModel do
 
+  before :all do
+    WebMock.allow_net_connect!
+    CloudModel.establish_db_connection
+  end
+
+  after :all do
+    WebMock.disable_net_connect!
+  end
+
+
   it "should support the after_initialize callback" do
     CloudModel.new.created_by.should == "Peter"
   end
@@ -22,13 +32,19 @@ describe CloudModel do
   end
 
   it "should support the after_commit callback" do
-    i = CloudModel.new
+    # CloudModel.dynamo_table.should_receive(:exists?).and_return(false)
+    # CloudModel.should_receive(:create_table)
+    CloudModel.establish_db_connection
+    i = CloudModel.new uuid: "same-uuid-as-always"
+    # i.dynamo_items.should_receive(:create)
     i.started_at.should == nil
     i.save!
     i.started_at.should be_a Time
   end
 
   it "should support the after_find callback"
+
+  it "should support the touch callback"
 
 
 

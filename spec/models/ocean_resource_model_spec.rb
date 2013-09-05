@@ -15,6 +15,7 @@ describe TheModel do
   end
 
 
+
   it "ocean_resource_model should be available as a class method" do
   	@c.ocean_resource_model
   end

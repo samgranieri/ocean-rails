@@ -28,7 +28,7 @@ describe TheModelsController do
     end
 
     it "should return a 404 if the resource can't be found" do
-      put :update, id: -1
+      put :update, @args.merge(id: -1)
       response.status.should == 404
       response.content_type.should == "application/json"
     end

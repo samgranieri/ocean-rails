@@ -20,6 +20,7 @@ class CloudModel < DynamoDbModel::Base
   field :failed,               :boolean,     default: false
   field :poison,               :boolean,     default: false
   field :finished_at,          :datetime
+  field :gratuitous_float,     :float,       default: 3.141592
 
 
   # # Attributes

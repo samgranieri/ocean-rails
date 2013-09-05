@@ -7,6 +7,10 @@ describe TheModelsController do
   	@c = @i.class
   end
 
+  after :each do
+    @c.ocean_resource_controller   # Restore class defaults
+  end
+
 
   it "should be available as a class method from any controller" do
   	@c.ocean_resource_controller
@@ -33,7 +37,6 @@ describe TheModelsController do
   it "instances should have an extra_actions method" do
   	@c.ocean_resource_controller extra_actions: {gniff: [], gnoff: []}
   	@i.extra_actions.should == {gniff: [], gnoff: []}
-    @c.ocean_resource_controller   # Restore class defaults
   end
 
 
@@ -50,7 +53,6 @@ describe TheModelsController do
   it ":required_attributes should be reachable through a class method" do
     @c.ocean_resource_controller required_attributes: [:quux, :snarf]
     @c.ocean_resource_controller_required_attributes.should == [:quux, :snarf]
-    @c.ocean_resource_controller   # Restore class defaults
   end
 
 
@@ -66,7 +68,6 @@ describe TheModelsController do
   it ":permitted_attributes should be reachable through a class method" do
     @c.ocean_resource_controller permitted_attributes: [:gnik, :gnok]
     @c.ocean_resource_controller_permitted_attributes.should == [:gnik, :gnok]
-    @c.ocean_resource_controller   # Restore class defaults
   end
 
 
@@ -82,7 +83,6 @@ describe TheModelsController do
   it ":no_error_data_on should be reachable through a class method" do
     @c.ocean_resource_controller no_validation_errors_on: [:password_hash, :password_salt]
     @c.ocean_resource_controller_no_validation_errors_on.should == [:password_hash, :password_salt]
-    @c.ocean_resource_controller   # Restore class defaults
   end
 
 
@@ -90,7 +90,6 @@ describe TheModelsController do
   	@c.ocean_resource_controller required_attributes: [:blirg, :blorg, :gnikk]
     @i.params = {blirg: 2, blorggh: 3, fnyyk: 4}
   	@i.missing_attributes?.should == true
-    @c.ocean_resource_controller   # Restore class defaults
   end
 
 end

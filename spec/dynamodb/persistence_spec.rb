@@ -63,7 +63,7 @@ describe CloudModel do
     @i.save.should == false
   end
 
-  it "save should raise RecordNotSaved if the record wasn't saved" do
+  it "save! should raise RecordNotSaved if the record wasn't saved" do
     @i.stub(:create_or_update).and_return(false)
     expect { @i.save! }.to raise_error(DynamoDbModel::RecordNotSaved)
   end

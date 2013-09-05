@@ -15,6 +15,7 @@ module DynamoDbModel
   class UnknownTableStatus < DynamoDbError; end
   class RecordInvalid < DynamoDbError; end
   class RecordNotSaved < DynamoDbError; end
+  class UnsupportedType < DynamoDbError; end
 
 
   class Base
@@ -34,6 +35,7 @@ module DynamoDbModel
 
     class_attribute :dynamo_client, instance_writer: false
     class_attribute :dynamo_table, instance_writer: false
+    class_attribute :dynamo_items, instance_writer: false
 
     class_attribute :table_name, instance_writer: false
     class_attribute :table_name_prefix, instance_writer: false
@@ -90,6 +92,7 @@ module DynamoDbModel
     def self.establish_db_connection
       self.dynamo_client = AWS::DynamoDB.new
       self.dynamo_table = dynamo_client.tables[table_full_name]
+      self.dynamo_items = dynamo_table.items
       if dynamo_table.exists?
         case dynamo_table.status
         when :active
@@ -101,7 +104,8 @@ module DynamoDbModel
           return true
         when :deleting
           sleep 1 while dynamo_table.exists?
-          return create_table
+          create_table
+          return
         else
           raise UnknownTableStatus.new("Unknown DynamoDB table status '#{dynamo_table.status}'")
         end
@@ -117,13 +121,10 @@ module DynamoDbModel
 
 
     def self.create_table
-      self.dynamo_table = dynamo_client.tables.create(
-        table_full_name, 
-        table_read_capacity_units, 
-        table_write_capacity_units,
+      self.dynamo_table = dynamo_client.tables.create(table_full_name, 
+        table_read_capacity_units, table_write_capacity_units,
         hash_key: { table_hash_key => fields[table_hash_key][:type]},
-        range_key: table_range_key && { table_range_key => fields[table_range_key][:type]}
-        )
+        range_key: table_range_key && { table_range_key => fields[table_range_key][:type]})
       sleep 1 while dynamo_table.status == :creating
       true
     end
@@ -174,6 +175,7 @@ module DynamoDbModel
     attr_reader :destroyed
     attr_reader :new_record
     attr_reader :persisted
+    attr_reader :dynamo_item
 
 
     def initialize(attributes={})
@@ -190,6 +192,7 @@ module DynamoDbModel
           end
         end
         super
+        @dynamo_item = nil
         @destroyed = false
         @new_record = true
         @persisted = false
@@ -230,6 +233,38 @@ module DynamoDbModel
       end
     end
 
+    def serialized_attributes
+      result = {}
+      attributes.each do |k, v|
+        serialized = serialize_attribute k, v
+        result[k] = serialized unless serialized == nil
+      end
+      result
+    end
+
+    def serialize_attribute(attribute, value)
+      return nil if value == nil
+      field = fields[attribute]
+      type = field[:type]
+      default = field[:type]
+      case type
+      when :string
+        value == "" ? nil : value
+      when :integer
+        value
+      when :float
+        value
+      when :boolean
+        value ? 1 : 0
+      when :datetime
+        value.to_i
+      when :serialized
+        value.to_json
+      else
+        raise UnsupportedType.new(type.to_s)
+      end
+    end
+
 
     def destroyed?
       @destroyed
@@ -252,30 +287,34 @@ module DynamoDbModel
       end
     end
 
+
     def save!(*)
       create_or_update || raise(RecordNotSaved)
     end
+
 
     def create_or_update
       result = new_record? ? create : update
       result != false
     end
 
-    def create
-      run_callbacks :save do
-        run_callbacks :create do
-          run_callbacks :commit do
 
+    def create
+      run_callbacks :commit do
+        run_callbacks :save do
+          run_callbacks :create do
+            @dynamo_item = dynamo_items.create(serialized_attributes)
             true
           end
         end
       end
     end
+
 
     def update
-      run_callbacks :save do
-        run_callbacks :update do
-          run_callbacks :commit do
+      run_callbacks :commit do
+        run_callbacks :save do
+          run_callbacks :update do
 
             true
           end
@@ -283,9 +322,10 @@ module DynamoDbModel
       end
     end
 
+
     def destroy
-      run_callbacks :destroy do
-        run_callbacks :commit do
+      run_callbacks :commit do
+        run_callbacks :destroy do
           unless new_record?
             # Delete the record here
 
