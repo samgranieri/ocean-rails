@@ -92,6 +92,8 @@ module DynamoDbModel
 
 
     def self.establish_db_connection
+      #self.dynamo_client = AWS::DynamoDB::Client.new(:api_version => '2012-08-10') 
+      #self.dynamo_client = AWS::DynamoDB::Client.new(:api_version => '2011-12-05')
       self.dynamo_client = AWS::DynamoDB.new
       self.dynamo_table = dynamo_client.tables[table_full_name]
       self.dynamo_items = dynamo_table.items
@@ -134,11 +136,23 @@ module DynamoDbModel
       self.dynamo_table = dynamo_client.tables.create(table_full_name, 
         table_read_capacity_units, table_write_capacity_units,
         hash_key: { table_hash_key => fields[table_hash_key][:type]},
-        range_key: table_range_key && { table_range_key => fields[table_range_key][:type]})
+        range_key: table_range_key && { table_range_key => fields[table_range_key][:type]}
+        # hash_key: [ table_hash_key, fields[table_hash_key][:type]],
+        # range_key: table_range_key && [table_range_key, fields[table_range_key][:type]]
+        )
       sleep 1 until dynamo_table.status == :active
       true
     end
-
+# ddb.create_table(table_name: "test_table", 
+#                  attribute_definitions: [{ attribute_name: "my_id", 
+#                                            attribute_type: "S"
+#                                          }, 
+#                                          { attribute_name: "my_range", 
+#                                            attribute_type: "S"}], 
+#                  key_schema: [ {attribute_name: "my_id", key_type: "HASH"}, 
+#                                {attribute_name: "my_range", key_type: "RANGE"}],
+#                  provisioned_throughput: { read_capacity_units: 1, 
+#                                            write_capacity_units: 1})
 
     def self.delete_table
       return false unless dynamo_table.exists? && dynamo_table.status == :active

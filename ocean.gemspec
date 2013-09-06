@@ -53,5 +53,5 @@ OS, and back end code completely agnostic of whether it is called by a client br
   s.add_development_dependency "webmock"
   s.add_development_dependency "simplecov"
   s.add_development_dependency "factory_girl_rails", "~> 4.0"
-  s.add_development_dependency "fake_dynamo", "~> 0.2.4"
+  s.add_development_dependency "fake_dynamo", "~> 0.1.3"
 end
