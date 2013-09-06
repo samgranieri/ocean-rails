@@ -143,7 +143,7 @@ To enable HTTP traffic:
  WebMock.allow_net_connect!
 
 Please refer to the +webmock+ gem documentation for full information. It's possible to
-prevent traffic only to specific hosts, such as localhost.
+prevent traffic only to specific hosts (e.g. +localhost+).
 
 You may also need to initialise the table connection:
 
@@ -152,4 +152,7 @@ You may also need to initialise the table connection:
 This will, amongst other things, also create the CloudModel table if it doesn't already
 exist. On Amazon, this will take a little while. With +fake_dynamo+, it's practically
 instant.
+
+When you leave the console, you must navigate back to the Rails directory (<tt>cd ../..</tt>)
+in order to be able to run RSpec again.
 
