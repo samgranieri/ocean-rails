@@ -263,16 +263,6 @@ module Dynamo
     end
 
 
-    def [](attribute)
-      read_attribute attribute
-    end
-
-
-    def []=(attribute, value)
-      write_attribute attribute, value
-    end
-
-
     def read_attribute(name)
       @attributes[name]
     end
@@ -280,6 +270,16 @@ module Dynamo
 
     def write_attribute(name, value)
       @attributes[name] = value
+    end
+
+
+    def [](attribute)
+      read_attribute attribute
+    end
+
+
+    def []=(attribute, value)
+      write_attribute attribute, value
     end
 
 
@@ -355,7 +355,9 @@ module Dynamo
     def deserialize_attribute(value, metadata, 
                               type: metadata[:type], 
                               default: metadata[:default])
-      return default if value == nil && default != nil
+      if value == nil && default != nil
+        return (default.is_a?(Proc) ? default.call : default) 
+      end
       case type
       when :string
         return "" if value == nil
@@ -442,7 +444,7 @@ module Dynamo
             t = Time.now
             self.created_at ||= t
             self.updated_at ||= t
-            persist
+            dynamo_persist
             true
           end
         end
@@ -456,7 +458,7 @@ module Dynamo
         run_callbacks :save do
           run_callbacks :update do
             self.updated_at = Time.now
-            persist
+            dynamo_persist
             true
           end
         end
@@ -508,7 +510,9 @@ module Dynamo
 
     protected
 
-    def persist
+
+
+    def dynamo_persist
       @dynamo_item = dynamo_items.put(serialized_attributes)
       @new_record = false
     end

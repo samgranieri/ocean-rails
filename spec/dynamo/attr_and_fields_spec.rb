@@ -172,4 +172,15 @@ describe CloudModel do
     i['uuid'].should == "yowza"
   end
 
+  # it "should implement <<" do
+  #   i = CloudModel.new
+  #   i.steps.should == []
+  #   i.steps << 1
+  #   i.steps.should == [1]
+  #   i.steps << 2
+  #   i.steps.should == [2]
+  #   i.steps << 3
+  #   i.steps.should == [3]
+  # end
+
 end

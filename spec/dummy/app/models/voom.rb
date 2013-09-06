@@ -5,7 +5,7 @@ class Voom < Dynamo::Base
   primary_key :uuid, false
 
 
-  field :uuid, :string,     default: lambda { SecureRandom.uuid }
+  field :uuid, :string,       default: lambda { SecureRandom.uuid }
   field :logged, :serialized, default: []
 
 
