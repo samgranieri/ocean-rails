@@ -172,15 +172,31 @@ describe CloudModel do
     i['uuid'].should == "yowza"
   end
 
-  # it "should implement <<" do
-  #   i = CloudModel.new
-  #   i.steps.should == []
-  #   i.steps << 1
-  #   i.steps.should == [1]
-  #   i.steps << 2
-  #   i.steps.should == [2]
-  #   i.steps << 3
-  #   i.steps.should == [3]
-  # end
+  it "should verify that << works normally" do
+    x = [:foo, :bar, :baz]
+    x.should == [:foo, :bar, :baz]
+    x << :quux
+    x.should == [:foo, :bar, :baz, :quux]
+    y = []
+    y.should == []
+    y << :nix
+    y.should == [:nix]
+    z = []
+    z.should == []
+    z << :nix
+    z.should == [:nix]
+  end
+
+  it "should verify that structure isn't shared in defaults between instances" do
+    i = CloudModel.new
+    i.list.should == [1, 2, 3]
+    i.list << 4
+    i.list.should == [1, 2, 3, 4]
+
+    j = CloudModel.new
+    j.list.should == [1, 2, 3]
+    j.list << 4
+    j.list.should == [1, 2, 3, 4]
+  end
 
 end

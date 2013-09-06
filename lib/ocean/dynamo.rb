@@ -245,9 +245,7 @@ module Dynamo
       run_callbacks :initialize do
         @attributes = HashWithIndifferentAccess.new
         fields.each do |name, v| 
-          default = v[:default]
-          default = default.call if default.is_a?(Proc)
-          write_attribute(name, default) unless read_attribute(name)
+          write_attribute(name, evaluate_default(v[:default])) unless read_attribute(name)
           self.class.class_eval "def #{name}; read_attribute('#{name}'); end"
           self.class.class_eval "def #{name}=(value); write_attribute('#{name}', value); end"
           if fields[name][:type] == :boolean
@@ -356,12 +354,12 @@ module Dynamo
                               type: metadata[:type], 
                               default: metadata[:default])
       if value == nil && default != nil
-        return (default.is_a?(Proc) ? default.call : default) 
+        return evaluate_default(default)
       end
       case type
       when :string
         return "" if value == nil
-        value
+        value.is_a?(Array) ? value.to_a : value
       when :integer
         return nil if value == nil
         value.is_a?(Array) ? value.collect(&:to_i) : value.to_i
@@ -508,8 +506,14 @@ module Dynamo
     end
 
 
+
     protected
 
+    def evaluate_default(v)
+      return v.call if v.is_a?(Proc)
+      return v.clone if v.is_a?(Array)    # Instances need their own copy
+      v
+    end
 
 
     def dynamo_persist

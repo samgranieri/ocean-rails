@@ -11,6 +11,7 @@ class Voom < Dynamo::Base
 
   def log(str)
     self.logged = self.logged + [str]
+    #self.logged << str
   end
 
 
