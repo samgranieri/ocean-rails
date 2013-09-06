@@ -31,4 +31,6 @@ RSpec.configure do |config|
 
   # Make "FactoryGirl" superfluous
   config.include FactoryGirl::Syntax::Methods
+
+  config.before(:suite) { system "curl -X DELETE http://localhost:4567" }
 end
