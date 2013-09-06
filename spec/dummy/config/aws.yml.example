@@ -12,11 +12,16 @@ amazon: &amazon
   region:             eu-west-1
   user_agent_prefix:  Ocean
 
-# Do not set this db to the same as production.
+
+#
+# It is safe to set any of the following three environments to
+# *amazon, as table names will be suffixed according to the
+# environment (CHEF_ENV and Rails.env). See Api.basename_suffix.
+#
+
 development:
   <<: *local
 
-# Do not set this db to the same as production.
 test:
   <<: *local
 

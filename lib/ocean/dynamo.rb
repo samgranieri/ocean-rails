@@ -100,17 +100,22 @@ module Dynamo
 
 
     def self.establish_db_connection
-      #self.dynamo_client = AWS::DynamoDB::Client.new(:api_version => '2012-08-10') 
-      #self.dynamo_client = AWS::DynamoDB::Client.new(:api_version => '2011-12-05')
-      self.dynamo_client = AWS::DynamoDB.new
-      self.dynamo_table = dynamo_client.tables[table_full_name]
-      self.dynamo_items = dynamo_table.items
+      setup_dynamo      
       if dynamo_table.exists?
         wait_until_table_is_active
       else
         create_table
       end
       set_dynamo_table_keys
+    end
+
+
+    def self.setup_dynamo
+      #self.dynamo_client = AWS::DynamoDB::Client.new(:api_version => '2012-08-10') 
+      #self.dynamo_client = AWS::DynamoDB::Client.new(:api_version => '2011-12-05')
+      self.dynamo_client ||= AWS::DynamoDB.new
+      self.dynamo_table = dynamo_client.tables[table_full_name]
+      self.dynamo_items = dynamo_table.items
     end
 
 
@@ -150,7 +155,7 @@ module Dynamo
         range_key: table_range_key && { table_range_key => fields[table_range_key][:type]}
         )
       sleep 1 until dynamo_table.status == :active
-
+      setup_dynamo
       true
     end
 
@@ -196,6 +201,11 @@ module Dynamo
       return false unless item.exists?
       item.delete
       true
+    end
+
+
+    def self.count
+      dynamo_table.item_count || -1    # The || -1 is for fake_dynamo specs.
     end
 
 
@@ -508,9 +518,7 @@ module Dynamo
       end
     end
 
+  end # Base
 
-  end
-
-
-end
+end # Dynamo
 

@@ -5,10 +5,10 @@ describe CloudModel do
 
   before :all do
     WebMock.allow_net_connect!
+    CloudModel.establish_db_connection
   end
 
   before :each do
-    CloudModel.establish_db_connection
     CloudModel.dynamo_client = nil
     CloudModel.dynamo_table = nil
     CloudModel.dynamo_items = nil

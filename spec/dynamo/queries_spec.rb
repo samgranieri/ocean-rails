@@ -5,10 +5,10 @@ describe CloudModel do
 
   before :all do
     WebMock.allow_net_connect!
+    CloudModel.establish_db_connection
   end
 
   before :each do
-    CloudModel.establish_db_connection
     @i = CloudModel.new
   end
 
@@ -121,6 +121,11 @@ describe CloudModel do
     it "should barf on an unsupported data type" do
       expect { @i.deserialize_attribute(nil, {}, type: :nowai) }.to raise_error(Dynamo::UnsupportedType)
     end
+  end
+
+
+  it "should have a class method count" do
+    CloudModel.count.should be_an Integer
   end
 
 end
