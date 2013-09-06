@@ -24,7 +24,7 @@ module Dynamo
 
     include ActiveModel::Model
     include ActiveModel::Validations::Callbacks
-    #include ActiveModel::Dirty          # We don't get this to work. Grrr.
+    #include ActiveModel::Dirty          # TODO
 
 
     # ---------------------------------------------------------
@@ -112,7 +112,6 @@ module Dynamo
 
     def self.setup_dynamo
       #self.dynamo_client = AWS::DynamoDB::Client.new(:api_version => '2012-08-10') 
-      #self.dynamo_client = AWS::DynamoDB::Client.new(:api_version => '2011-12-05')
       self.dynamo_client ||= AWS::DynamoDB.new
       self.dynamo_table = dynamo_client.tables[table_full_name]
       self.dynamo_items = dynamo_table.items
@@ -185,14 +184,7 @@ module Dynamo
     def self.find(hash, range=nil, consistent: false)
       item = dynamo_items[hash, range]
       raise RecordNotFound unless item.exists?
-      f = new
-      f.instance_variable_set(:@dynamo_item, item)
-      f.instance_variable_set(:@new_record, false)
-      f.assign_attributes(f.deserialized_attributes(
-         hash: nil,
-         consistent_read: consistent)
-        )
-      f
+      new.send(:post_instantiate, item, consistent)
     end
 
 
@@ -221,9 +213,7 @@ module Dynamo
     define_model_callbacks :update
     define_model_callbacks :destroy
     define_model_callbacks :commit, only: :after
-    define_model_callbacks :find, only: :after
     define_model_callbacks :touch
-
 
 
     # ---------------------------------------------------------
@@ -445,15 +435,14 @@ module Dynamo
 
 
     def create
+      return false unless valid?
       run_callbacks :commit do
         run_callbacks :save do
           run_callbacks :create do
-            return false unless valid?
             t = Time.now
             self.created_at ||= t
             self.updated_at ||= t
-            @dynamo_item = dynamo_items.put(serialized_attributes)
-            @new_record = false
+            persist
             true
           end
         end
@@ -462,19 +451,17 @@ module Dynamo
 
 
     def update
+      return false unless valid?
       run_callbacks :commit do
         run_callbacks :save do
           run_callbacks :update do
-            return false unless valid?
             self.updated_at = Time.now
-            @dynamo_item = dynamo_items.put(serialized_attributes)
-            @new_record = false
+            persist
             true
           end
         end
       end
     end
-
 
     def destroy
       run_callbacks :commit do
@@ -516,6 +503,25 @@ module Dynamo
         end
         self
       end
+    end
+
+
+    protected
+
+    def persist
+      @dynamo_item = dynamo_items.put(serialized_attributes)
+      @new_record = false
+    end
+
+
+    def post_instantiate(item, consistent)
+      @dynamo_item = item
+      @new_record = false
+      assign_attributes(deserialized_attributes(
+        hash: nil,
+        consistent_read: consistent)
+      )
+      self
     end
 
   end # Base

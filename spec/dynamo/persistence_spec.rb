@@ -140,7 +140,7 @@ describe CloudModel do
   end
 
   it "should have a method update_attributes" do
-    @i.created_by.should == "Peter"
+    @i.created_by.should == nil
     @i.finished_at.should == nil
     @i.update_attributes(created_by: "Egon", finished_at: Time.now).should == true
     @i.created_by.should == "Egon"
@@ -152,7 +152,7 @@ describe CloudModel do
   end
 
   it "should have a method update_attributes!" do
-    @i.created_by.should == "Peter"
+    @i.created_by.should == nil
     @i.finished_at.should == nil
     @i.update_attributes!(created_by: "Egon", finished_at: Time.now).should == true
     @i.created_by.should == "Egon"
@@ -178,7 +178,6 @@ describe CloudModel do
     i.started_at.to_f.should_not == ca
     i.started_at.to_f.should_not == ua
   end
-
 
 
   it "should have an instance method delete" do

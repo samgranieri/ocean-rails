@@ -32,5 +32,6 @@ RSpec.configure do |config|
   # Make "FactoryGirl" superfluous
   config.include FactoryGirl::Syntax::Methods
 
-  config.before(:suite) { system "curl -X DELETE http://localhost:4567" }
+  # To clear the fake_dynamo DB before each run, uncomment the following line:
+  # config.before(:suite) { system "curl -X DELETE http://localhost:4567" }
 end
