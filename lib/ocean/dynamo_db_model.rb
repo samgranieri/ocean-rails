@@ -54,6 +54,14 @@ module DynamoDbModel
       self.table_name = name
     end
 
+    def self.set_table_name_prefix(prefix)
+      self.table_name_prefix = prefix
+    end
+
+    def self.set_table_name_suffix(suffix)
+      self.table_name_suffix = suffix
+    end
+
 
     def self.compute_table_name
       name.pluralize.underscore
@@ -102,6 +110,7 @@ module DynamoDbModel
       else
         create_table
       end
+      set_dynamo_table_keys
     end
 
 
@@ -128,7 +137,9 @@ module DynamoDbModel
 
     def self.set_dynamo_table_keys
       dynamo_table.hash_key = [table_hash_key, fields[table_hash_key][:type]]
-      dynamo_table.range_key = [table_range_key, fields[table_range_key][:type]] if table_range_key
+      if table_range_key
+        dynamo_table.range_key = [table_range_key, fields[table_range_key][:type]]
+      end
     end
 
 
@@ -137,22 +148,11 @@ module DynamoDbModel
         table_read_capacity_units, table_write_capacity_units,
         hash_key: { table_hash_key => fields[table_hash_key][:type]},
         range_key: table_range_key && { table_range_key => fields[table_range_key][:type]}
-        # hash_key: [ table_hash_key, fields[table_hash_key][:type]],
-        # range_key: table_range_key && [table_range_key, fields[table_range_key][:type]]
         )
       sleep 1 until dynamo_table.status == :active
+
       true
     end
-# ddb.create_table(table_name: "test_table", 
-#                  attribute_definitions: [{ attribute_name: "my_id", 
-#                                            attribute_type: "S"
-#                                          }, 
-#                                          { attribute_name: "my_range", 
-#                                            attribute_type: "S"}], 
-#                  key_schema: [ {attribute_name: "my_id", key_type: "HASH"}, 
-#                                {attribute_name: "my_range", key_type: "RANGE"}],
-#                  provisioned_throughput: { read_capacity_units: 1, 
-#                                            write_capacity_units: 1})
 
     def self.delete_table
       return false unless dynamo_table.exists? && dynamo_table.status == :active

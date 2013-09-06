@@ -4,17 +4,30 @@ require 'spec_helper'
 describe CloudModel do
 
   before :all do
-    #WebMock.allow_net_connect!
+    WebMock.allow_net_connect!
   end
 
   before :each do
+    CloudModel.establish_db_connection
     CloudModel.dynamo_client = nil
     CloudModel.dynamo_table = nil
     CloudModel.dynamo_items = nil
+    @saved_table_name = CloudModel.table_name
+    @saved_prefix = CloudModel.table_name_prefix
+    @saved_suffix = CloudModel.table_name_suffix
+    CloudModel.table_name = "cloud_models"
+    CloudModel.table_name_prefix = nil
+    CloudModel.table_name_suffix = nil
+  end
+
+  after :each do
+    CloudModel.table_name = @saved_table_name
+    CloudModel.table_name_prefix = @saved_prefix
+    CloudModel.table_name_suffix = @saved_suffix
   end
 
   after :all do
-    #WebMock.disable_net_connect!
+    WebMock.disable_net_connect!
   end
 
 
@@ -25,21 +38,28 @@ describe CloudModel do
   it "should have a class set_table_name method" do
     CloudModel.set_table_name('bibbedy_babbedy')
     CloudModel.table_name.should == "bibbedy_babbedy"
-    CloudModel.set_table_name('cloud_models')  # Restore class var
+  end
+
+  it "should have a class set_table_name_prefix method" do
+    CloudModel.set_table_name_prefix('Prefix_')
+    CloudModel.table_name_prefix.should == "Prefix_"
+  end
+
+  it "should have a class set_table_name_suffix method" do
+    CloudModel.set_table_name_suffix('_suffiX')
+    CloudModel.table_name_suffix.should == "_suffiX"
   end
 
   it "should have a table_name_prefix" do
     CloudModel.table_name_prefix.should == nil
     CloudModel.table_name_prefix = "foo_"
     CloudModel.table_name_prefix.should == "foo_"
-    CloudModel.table_name_prefix = nil         # Restore class var
   end
 
   it "should have a table_name_suffix" do
     CloudModel.table_name_suffix.should == nil
     CloudModel.table_name_suffix = "_bar"
     CloudModel.table_name_suffix.should == "_bar"
-    CloudModel.table_name_suffix = nil         # Restore class var
   end
 
   it "should have a table_full_name method" do
@@ -47,8 +67,6 @@ describe CloudModel do
     CloudModel.table_name_prefix = "foo_"
     CloudModel.table_name_suffix = "_bar"
     CloudModel.table_full_name.should == "foo_cloud_models_bar"
-    CloudModel.table_name_prefix = nil         # Restore class var
-    CloudModel.table_name_suffix = nil         # Restore class var
   end
 
   it "should have a dynamo_table class_variable" do
@@ -116,6 +134,8 @@ describe CloudModel do
     AWS::DynamoDB::Table.any_instance.should_receive(:exists?).and_return(false)
     t = double(AWS::DynamoDB::Table)
     allow(t).to receive(:status).and_return(:creating, :creating, :creating, :active)
+    allow(t).to receive(:hash_key=).once
+    allow(t).to receive(:range_key=).once
     AWS::DynamoDB::TableCollection.any_instance.should_receive(:create).
       with("cloud_models", 
            10, 

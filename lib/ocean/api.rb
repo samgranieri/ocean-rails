@@ -62,8 +62,11 @@ class Api
   # This is a precaution; in staging and prod apps should always run in Rails production mode, 
   # but if by mistake they don't, we must prevent the production queues from being touched.
   #
-  def self.adorn_basename(basename, chef_env: "dev", rails_env: "development")
-    fullname = "#{basename}_#{chef_env}"
+  # If +suffix_only+ is true, the basename will be excluded from the returned string.
+  #
+  def self.adorn_basename(basename, chef_env: "dev", rails_env: "development",
+                          suffix_only: false)
+    fullname = suffix_only ? "_#{chef_env}" : "#{basename}_#{chef_env}"
     if rails_env != 'production' || chef_env == 'dev' || chef_env == 'ci'
       local_ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}.gsub('.', '-')
       fullname += "_#{local_ip}_#{rails_env}"

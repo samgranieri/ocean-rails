@@ -113,18 +113,43 @@ Next, copy the +config.yml+ file from its template:
 
   cp spec/dummy/config/config.yml.example spec/dummy/config/config.yml
 
-Edit its contents to suit your setup.
+Edit the contents of +config.yml+ to suit your setup.
 
 You must now generate the SQLite databases:
 
  rake db:migrate
  RAILS_ENV=test rake db:migrate
 
-You should now be able to do
+With +fake_dynamo+ running, you should now be able to do
 
  rspec
 
 All tests should pass.
 
 
+=== Rails console
+
+The Rails console is available from the built-in dummy application:
+
+ cd spec/dummy
+ rails console
+
+You're now in a sandbox environment (thanks to +webmock+): HTTP accesses are disallowed;
+each HTTP access you make will be intercepted with a message describing exactly how to
+mock it away.
+
+To enable HTTP traffic:
+
+ WebMock.allow_net_connect!
+
+Please refer to the +webmock+ gem documentation for full information. It's possible to
+prevent traffic only to specific hosts, such as localhost.
+
+You may also need to initialise the table connection:
+
+ CloudModel.establish_db_connection
+
+This will, amongst other things, also create the CloudModel table if it doesn't already
+exist. On Amazon, this will take a little while. With +fake_dynamo+, it's practically
+instant.
 

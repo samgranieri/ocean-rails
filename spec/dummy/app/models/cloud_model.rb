@@ -1,5 +1,7 @@
 class CloudModel < DynamoDbModel::Base
 
+  set_table_name_suffix = Api.adorn_basename(self.table_name, chef_env: CHEF_ENV, rails_env: Rails.env)
+
   primary_key :uuid, false
   read_capacity_units 10
   write_capacity_units 5
