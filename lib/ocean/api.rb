@@ -78,8 +78,8 @@ class Api
   #
   # Like +adorn_basename+, but returns only the suffix. Uses CHEF_ENV and Rails.env.
   #
-  def self.basename_suffix(basename)
-    adorn_basename basename, suffix_only: true, chef_env: CHEF_ENV, rails_env: Rails.env
+  def self.basename_suffix
+    adorn_basename '', suffix_only: true, chef_env: CHEF_ENV, rails_env: Rails.env
   end
 
 
