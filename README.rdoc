@@ -72,3 +72,58 @@ All tests should pass. The test coverage should be very close to 100%. A Factory
 You can now proceed to tailor the new resource to your needs. You will want to add other attributes to the model or remove some or all of the default ones; you can change the JSON representation by modifying the view; and you might want to add or remove controller actions, e.g. to support secondary collections and relations to other resources. And as you no doubt are a responsible, informed developer, you will of course do all this using TDD and/or BDD techniques.
 
 
+=== Running the specs
+
+To run the specs for the ocean-rails gem, you must first install the bundle. It will download
+a gem called fake_dynamo, which runs a local, in-memory functional clone of Amazon DynamoDB.
+We use fake_dynamo during development and testing.
+
+First of all, copy the AWS configuration file from the template:
+
+ cp spec/dummy/config/aws.yml.example spec/dummy/config/aws.yml
+
+NB: aws.yml is excluded from source control. This allows you to enter your AWS credentials
+safely. Note that aws.yml.example is under source control: don't edit it.
+
+Make sure your have version 0.1.3 of the fake_dynamo gem. It implements the +2011-12-05+ version
+of the DynamoDB API. We're not yet using the +2012-08-10+ version, as the aws-sdk ruby gem
+doesn't fully support it. We'll make the change as soon as aws-sdk is updated. Reportedly,
+it's in the works.
+
+Next, start fake_dynamo:
+
+  fake_dynamo --port 4567
+
+If this returns errors, make sure that <tt>/usr/local/var/fake_dynamo</tt> exists and
+is writeable:
+
+ sudo mkdir -p /usr/local/var/fake_dynamo
+ sudo chown peterb:staff /usr/local/var/fake_dynamo
+
+When fake_dynamo runs normally, open another window and issue the following command:
+
+ curl -X DELETE http://localhost:4567
+
+This will reset the fake_dynamo databases. It's not a required operation when starting
+fake_dynamo; we're just using it here as a test that the installation works. It will
+be issued automatically as part of the test suite, so don't expect test data to survive.
+
+Next, copy the config.yml file from its template:
+
+  cp spec/dummy/config/config.yml.example spec/dummy/config/config.yml
+
+Edit its contents to suit your setup.
+
+You must now generate the SQLite databases:
+
+ rake db:migrate
+ RAILS_ENV=test rake db:migrate
+
+You should now be able to do
+
+ rspec
+
+All tests should pass.
+
+
+
