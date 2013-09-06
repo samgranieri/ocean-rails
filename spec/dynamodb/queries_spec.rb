@@ -18,7 +18,7 @@ describe CloudModel do
 
 
   it "find should barf on nonexistent keys" do
-    expect { CloudModel.find('some-nonexistent-key') }.to raise_error(DynamoDbModel::RecordNotFound)
+    expect { CloudModel.find('some-nonexistent-key') }.to raise_error(Dynamo::RecordNotFound)
   end
 
   it "find should return an existing CloudModel with a dynamo_item when successful" do
@@ -119,7 +119,7 @@ describe CloudModel do
 
 
     it "should barf on an unsupported data type" do
-      expect { @i.deserialize_attribute(nil, {}, type: :nowai) }.to raise_error(DynamoDbModel::UnsupportedType)
+      expect { @i.deserialize_attribute(nil, {}, type: :nowai) }.to raise_error(Dynamo::UnsupportedType)
     end
   end
 

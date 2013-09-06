@@ -1,7 +1,7 @@
 
 require "aws-sdk"
 
-module DynamoDbModel
+module Dynamo
 
   DEFAULT_FIELDS = [
     [:created_at,   :datetime], 
@@ -9,15 +9,15 @@ module DynamoDbModel
     [:lock_version, :integer, default: 0]
   ]
 
-  class DynamoDbError < StandardError; end
+  class DynamoError < StandardError; end
 
-  class NoPrimaryKeyDeclared < DynamoDbError; end
-  class UnknownTableStatus < DynamoDbError; end
-  class UnsupportedType < DynamoDbError; end
-  class RecordInvalid < DynamoDbError; end
-  class RecordNotSaved < DynamoDbError; end
-  class RecordNotFound < DynamoDbError; end
-  class RecordInConflict < DynamoDbError; end
+  class NoPrimaryKeyDeclared < DynamoError; end
+  class UnknownTableStatus < DynamoError; end
+  class UnsupportedType < DynamoError; end
+  class RecordInvalid < DynamoError; end
+  class RecordNotSaved < DynamoError; end
+  class RecordNotFound < DynamoError; end
+  class RecordInConflict < DynamoError; end
 
 
   class Base

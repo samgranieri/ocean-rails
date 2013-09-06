@@ -1,4 +1,4 @@
-class AsyncJob < DynamoDbModel::Base
+class AsyncJob < Dynamo::Base
 
   ocean_resource_model index: [:uuid], search: false,
                        invalidate_member: [],

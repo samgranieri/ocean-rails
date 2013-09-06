@@ -1,4 +1,4 @@
-class CloudModel < DynamoDbModel::Base
+class CloudModel < Dynamo::Base
 
   set_table_name_suffix = Api.adorn_basename(self.table_name, chef_env: CHEF_ENV, rails_env: Rails.env)
 

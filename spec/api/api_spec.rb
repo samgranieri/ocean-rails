@@ -273,7 +273,7 @@ describe Api do
   end
      
   
-  describe ".adorn_name" do
+  describe ".adorn_basename" do
 
     before :all do
       @local_ip = UDPSocket.open {|s| s.connect("64.233.187.99", 1); s.addr.last}.gsub('.', '-')

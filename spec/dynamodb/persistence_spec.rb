@@ -40,7 +40,7 @@ describe CloudModel do
 
   it "serialize_attribute should barf on an unknown attribute type" do
     expect { @i.serialize_attribute :quux, 42, {type: :falafel, default: nil} }. 
-      to raise_error(DynamoDbModel::UnsupportedType, "falafel")
+      to raise_error(Dynamo::UnsupportedType, "falafel")
   end
 
 
@@ -62,13 +62,13 @@ describe CloudModel do
   end
 
   it "save should call create_or_update and return false if RecordInvalid is raised" do
-    @i.stub(:create_or_update).and_raise(DynamoDbModel::RecordInvalid)
+    @i.stub(:create_or_update).and_raise(Dynamo::RecordInvalid)
     @i.save.should == false
   end
 
   it "save! should raise RecordNotSaved if the record wasn't saved" do
     @i.stub(:create_or_update).and_return(false)
-    expect { @i.save! }.to raise_error(DynamoDbModel::RecordNotSaved)
+    expect { @i.save! }.to raise_error(Dynamo::RecordNotSaved)
   end
 
   it "persisted? should return false when the instance is new" do
