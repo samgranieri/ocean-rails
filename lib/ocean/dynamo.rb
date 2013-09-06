@@ -353,13 +353,13 @@ module Dynamo
     def deserialize_attribute(value, metadata, 
                               type: metadata[:type], 
                               default: metadata[:default])
-      if value == nil && default != nil
+      if value == nil && default != nil && type != :string
         return evaluate_default(default)
       end
       case type
       when :string
         return "" if value == nil
-        value.is_a?(Array) ? value.to_a : value
+        value
       when :integer
         return nil if value == nil
         value.is_a?(Array) ? value.collect(&:to_i) : value.to_i
@@ -439,6 +439,7 @@ module Dynamo
       run_callbacks :commit do
         run_callbacks :save do
           run_callbacks :create do
+            write_attribute(table_hash_key, SecureRandom.uuid) if read_attribute(table_hash_key) == nil
             t = Time.now
             self.created_at ||= t
             self.updated_at ||= t
@@ -511,7 +512,7 @@ module Dynamo
 
     def evaluate_default(v)
       return v.call if v.is_a?(Proc)
-      return v.clone if v.is_a?(Array)    # Instances need their own copy
+      return v.clone if v.is_a?(Array) || v.is_a?(String)   # Instances need their own copy
       v
     end
 

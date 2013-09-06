@@ -3,6 +3,16 @@ require 'spec_helper'
 
 describe CloudModel do
 
+  before :all do
+    WebMock.allow_net_connect!
+    CloudModel.establish_db_connection
+  end
+
+  after :all do
+    WebMock.disable_net_connect!
+  end
+
+
   it_should_behave_like "ActiveModel"
 
   it "should be instantiatable" do
@@ -37,6 +47,12 @@ describe CloudModel do
     i.id.should == "blahonga"
     i.id = "snyko"
     i.uuid.should == "snyko"
+  end
+
+  it "should assign an UUID to the hash_key field if nil at create" do
+    i = CloudModel.new uuid: nil
+    i.save.should == true
+    i.uuid.should_not == nil
   end
 
 
@@ -128,8 +144,8 @@ describe CloudModel do
 
 
   it "should require the uuid to be present" do
-    CloudModel.new(uuid: "").valid?.should == false
-    CloudModel.new(uuid: "Ed").valid?.should == true
+    CloudModel.new(steps: nil).valid?.should == false
+    CloudModel.new(steps: [1,2,3]).valid?.should == true
   end
 
 
@@ -154,7 +170,7 @@ describe CloudModel do
 
   it "to_key should return an array of the present index key when the instance has been persisted" do
     CloudModel.any_instance.should_receive(:persisted?).and_return(true)
-    i = CloudModel.new
+    i = CloudModel.create
     i.to_key.should == [i.uuid]
   end
 

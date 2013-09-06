@@ -148,7 +148,7 @@ describe CloudModel do
   end
 
   it "update_attributes should not barf on an invalid record" do
-    @i.update_attributes(uuid: nil).should == false
+    @i.update_attributes(steps: nil).should == false
   end
 
   it "should have a method update_attributes!" do
@@ -160,7 +160,7 @@ describe CloudModel do
   end
 
   it "update_attributes! should barf on an invalid record" do
-    expect { @i.update_attributes!(uuid: nil) }.to raise_error
+    expect { @i.update_attributes!(steps: nil) }.to raise_error
   end
 
   it "should implement touch" do

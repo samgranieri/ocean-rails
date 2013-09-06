@@ -6,9 +6,9 @@ class CloudModel < Dynamo::Base
   read_capacity_units 10
   write_capacity_units 5
 
-  field :uuid,                 :string,      default: lambda { SecureRandom.uuid }
-  field :credentials,          :string,      default: nil
-  field :token
+  field :uuid,                 :string
+  field :credentials,          :string
+  field :token,                :string
   field :steps,                :serialized,  default: []
   field :max_seconds_in_queue, :integer,     default: 1.day
   field :default_poison_limit, :integer,     default: 5
@@ -28,7 +28,7 @@ class CloudModel < Dynamo::Base
 
 
   # Validations
-  validates_presence_of :uuid
+  #validates_presence_of :uuid
 
   validates_each :steps do |record, attr, value|
     record.errors.add(attr, 'must be an Array') unless value.is_a?(Array)

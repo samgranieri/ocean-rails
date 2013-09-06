@@ -41,9 +41,9 @@ describe CloudModel do
 
   describe "deserialize_attribute" do
 
-    it "for :string should return '' for nil, unless there is a default" do
+    it "for :string should return '' for nil, never the default" do
       @i.deserialize_attribute(nil, {}, type: :string).should == ''
-      @i.deserialize_attribute(nil, {}, type: :string, default: "Chelsea").should == 'Chelsea'
+      @i.deserialize_attribute(nil, {}, type: :string, default: "Chelsea").should == ''
     end
 
     it "for :string should handle single strings" do

@@ -4,14 +4,12 @@ class Voom < Dynamo::Base
 
   primary_key :uuid, false
 
-
-  field :uuid, :string,       default: lambda { SecureRandom.uuid }
+  field :uuid
   field :logged, :serialized, default: []
 
 
   def log(str)
-    self.logged = self.logged + [str]
-    #self.logged << str
+    self.logged << str
   end
 
 

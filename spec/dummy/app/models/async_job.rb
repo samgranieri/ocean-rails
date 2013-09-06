@@ -6,8 +6,8 @@ class AsyncJob < Dynamo::Base
 
   primary_key :uuid
 
-  field :uuid,                 :string,      default: lambda { SecureRandom.uuid }
-  field :credentials,          :string,      default: ""
+  field :uuid,                 :string
+  field :credentials,          :string
   field :token,                :string
   field :steps,                :serialized,  default: []
   field :max_seconds_in_queue, :integer,     default: 1.day
@@ -25,14 +25,6 @@ class AsyncJob < Dynamo::Base
 
 
   @@queue = nil
-
-
-  # Attributes
-  attr_accessible :uuid, :lock_version,
-                  :steps, :max_seconds_in_queue, :default_poison_limit,
-                  :credentials, :token, :default_step_time
-
-  # Scopes
 
 
   # Validations
