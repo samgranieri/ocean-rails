@@ -321,4 +321,14 @@ describe Api do
     end
   end
 
+
+  describe ".basename_suffix" do
+
+    it "should return a string" do
+      Api.basename_suffix("Q").should be_a String
+    end
+
+    
+  end
+
 end

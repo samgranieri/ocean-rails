@@ -76,6 +76,14 @@ class Api
 
 
   #
+  # Like +adorn_basename+, but returns only the suffix. Uses CHEF_ENV and Rails.env.
+  #
+  def self.basename_suffix(basename)
+    adorn_basename basename, suffix_only: true, chef_env: CHEF_ENV, rails_env: Rails.env
+  end
+
+
+  #
   # Makes a HTTP request to +host_url+ using the HTTP method +method+. The +resource_name+
   # is used to obtain the latest version string of the resource. The arg +path+ is the
   # local path, +args+ is a hash of query args, and +headers+ a hash of extra HTTP headers.
