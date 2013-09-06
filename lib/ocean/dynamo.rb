@@ -435,7 +435,7 @@ module Dynamo
 
 
     def create
-      return false unless valid?
+      return false unless valid?(:create)
       run_callbacks :commit do
         run_callbacks :save do
           run_callbacks :create do
@@ -452,7 +452,7 @@ module Dynamo
 
 
     def update
-      return false unless valid?
+      return false unless valid?(:update)
       run_callbacks :commit do
         run_callbacks :save do
           run_callbacks :update do

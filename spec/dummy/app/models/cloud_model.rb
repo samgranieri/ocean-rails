@@ -7,7 +7,7 @@ class CloudModel < Dynamo::Base
   write_capacity_units 5
 
   field :uuid,                 :string
-  field :credentials,          :string
+  field :credentials,          :string,      default: "blah"
   field :token,                :string
   field :steps,                :serialized,  default: []
   field :max_seconds_in_queue, :integer,     default: 1.day
@@ -33,12 +33,5 @@ class CloudModel < Dynamo::Base
   validates_each :steps do |record, attr, value|
     record.errors.add(attr, 'must be an Array') unless value.is_a?(Array)
   end 
-
-  validates :credentials, presence: { message: "must be specified", on: :create }
-
-  validates_each :credentials, on: :create, allow_blank: true do |job, attr, val|
-    username, password = Api.decode_credentials val
-    job.errors.add(attr, "are malformed") if username.blank? || password.blank?
-  end
 
 end
