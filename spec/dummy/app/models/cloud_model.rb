@@ -1,6 +1,6 @@
 class CloudModel < Dynamo::Base
 
-  set_table_name_suffix = Api.basename_suffix
+  set_table_name_suffix Api.basename_suffix
 
   primary_key :uuid, false
   read_capacity_units 10
