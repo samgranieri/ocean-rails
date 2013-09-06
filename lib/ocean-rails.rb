@@ -9,7 +9,7 @@ require "ocean/zero_log"
 require "ocean/zeromq_logger"
 require "ocean/selective_rack_logger"
 require "ocean/flooding"
-require "ocean/dynamo_db_model"
+require "ocean/dynamo"
 
 
 INVALIDATE_MEMBER_DEFAULT =     ["($|/|\\?)"]
