@@ -51,12 +51,12 @@ describe Bang do
     @i.soso = nil
     @i.save.should == false
     @i.errors[:soso].should == ["can't be blank"]
- end
+  end
 
- it "should raise an exception if hate is nil" do
-   @i.hate = false
-   expect { @i.save }.to raise_error(ActiveModel::StrictValidationFailed)
- end
+  it "should raise an exception if hate is nil" do
+    @i.hate = false
+    expect { @i.save }.to raise_error(ActiveModel::StrictValidationFailed)
+  end
 
 
 end

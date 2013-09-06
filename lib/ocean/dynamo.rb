@@ -24,7 +24,6 @@ module Dynamo
 
     include ActiveModel::Model
     include ActiveModel::Validations::Callbacks
-    #include ActiveModel::Dirty          # TODO
 
 
     # ---------------------------------------------------------
