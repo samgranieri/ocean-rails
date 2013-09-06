@@ -25,8 +25,6 @@ module DynamoDbModel
     include ActiveModel::Model
     include ActiveModel::Validations::Callbacks
     #include ActiveModel::Dirty          # We don't get this to work. Grrr.
-    #include ActiveModel::MassAssignmentSecurity
-    #require "active_model/mass_assignment_security.rb"
 
 
     # ---------------------------------------------------------
