@@ -8,6 +8,7 @@ gemspec
 gem "jbuilder"           # This shouldn't be necessary, but the mention in
                          # the gemspec doesn't suffice, for some reason.
 gem "protected_attributes"
+gem "ocean-dynamo"
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or

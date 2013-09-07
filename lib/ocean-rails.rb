@@ -10,6 +10,8 @@ require "ocean/zeromq_logger"
 require "ocean/selective_rack_logger"
 require "ocean/flooding"
 
+require "ocean-dynamo"
+
 
 INVALIDATE_MEMBER_DEFAULT =     ["($|/|\\?)"]
 INVALIDATE_COLLECTION_DEFAULT = ["($|\\?)"]
