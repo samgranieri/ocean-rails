@@ -20,15 +20,18 @@ module Ocean
     included do
       if defined? ActiveRecord
         rescue_from ActiveRecord::RecordNotUnique, 
-                    ActiveRecord::StatementInvalid do |x|
+                    ActiveRecord::StatementInvalid,
+                    OceanDynamo::RecordNotSaved do |x|
           render_api_error 422, "Resource not unique"
         end
 
-        rescue_from ActiveRecord::StaleObjectError do |x|
+        rescue_from ActiveRecord::StaleObjectError,
+                    OceanDynamo::RecordInConflict do |x|
           render_api_error 409, "Stale #{x.record.class.name}"
         end
 
-        rescue_from ActiveRecord::RecordInvalid do |x|
+        rescue_from ActiveRecord::RecordInvalid,
+                    OceanDynamo::RecordInvalid do |x|
           render_validation_errors x.record, except: ocean_resource_controller_no_validation_errors_on
         end
       end
