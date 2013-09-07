@@ -59,3 +59,4 @@ end
 
 
 ActiveRecord::Base.send :include, Ocean::OceanResourceModel
+OceanDynamo::Base.send :include, Ocean::OceanResourceModel

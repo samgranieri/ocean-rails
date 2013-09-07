@@ -1,5 +1,6 @@
 require "ocean/engine"
 
+require "ocean-dynamo"
 require "ocean/api"
 require "ocean/api_resource"
 require "ocean/ocean_resource_model" if defined? ActiveRecord
@@ -10,7 +11,6 @@ require "ocean/zeromq_logger"
 require "ocean/selective_rack_logger"
 require "ocean/flooding"
 
-require "ocean-dynamo"
 
 
 INVALIDATE_MEMBER_DEFAULT =     ["($|/|\\?)"]
