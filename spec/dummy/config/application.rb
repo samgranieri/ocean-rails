@@ -9,6 +9,7 @@ require "sprockets/railtie"
 
 Bundler.require(*Rails.groups)
 require "ocean-rails"
+require "ocean-dynamo"
 
 module Dummy
   class Application < Rails::Application

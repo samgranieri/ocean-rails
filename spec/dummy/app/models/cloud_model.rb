@@ -1,4 +1,4 @@
-class CloudModel < Dynamo::Base
+class CloudModel < OceanDynamo::Base
 
   set_table_name_suffix Api.basename_suffix
 
