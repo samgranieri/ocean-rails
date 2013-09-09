@@ -21,12 +21,12 @@ module Ocean
       if defined? ActiveRecord
         rescue_from ActiveRecord::RecordNotUnique, 
                     ActiveRecord::StatementInvalid,
-                    OceanDynamo::RecordNotSaved do |x|
+                    OceanDynamo::RecordNotUnique do |x|
           render_api_error 422, "Resource not unique"
         end
 
         rescue_from ActiveRecord::StaleObjectError,
-                    OceanDynamo::RecordInConflict do |x|
+                    OceanDynamo::StaleObjectError do |x|
           render_api_error 409, "Stale #{x.record.class.name}"
         end
 
