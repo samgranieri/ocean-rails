@@ -165,7 +165,7 @@ module OceanApplicationController
   # for resources creates a partial in the proper location.
   #
   def api_render(x, new: false)
-    if !x.is_a?(Array) && !x.is_a?(ActiveRecord::Relation)
+    if !x.is_a?(Array) && !(defined?(ActiveRecord) && x.is_a?(ActiveRecord::Relation))
       partial = x.to_partial_path
       if new
         render partial: partial, object: x, status: 201, location: x
