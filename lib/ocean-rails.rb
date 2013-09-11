@@ -3,7 +3,7 @@ require "ocean/engine"
 require "ocean-dynamo"
 require "ocean/api"
 require "ocean/api_resource"
-require "ocean/ocean_resource_model" if defined? ActiveRecord
+require "ocean/ocean_resource_model" if defined? ActiveRecord || defined? OceanDynamo
 require "ocean/ocean_resource_controller" if defined? ActionController
 require "ocean/ocean_application_controller"
 require "ocean/zero_log"

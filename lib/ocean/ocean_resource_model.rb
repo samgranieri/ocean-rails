@@ -58,5 +58,5 @@ module Ocean
 end
 
 
-ActiveRecord::Base.send :include, Ocean::OceanResourceModel
-OceanDynamo::Base.send :include, Ocean::OceanResourceModel
+ActiveRecord::Base.send :include, Ocean::OceanResourceModel if defined? ActiveRecord
+OceanDynamo::Base.send :include, Ocean::OceanResourceModel if defined? OceanDynamo
