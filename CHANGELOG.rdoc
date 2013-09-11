@@ -1,3 +1,8 @@
+== v1.22.4
+
+* Conditionalised exception handling in the resource controller in order to support
+  both ActiveRecord and OceanDynamo.
+
 == v1.22.3
 
 * String versions of exceptions in multi-class resource controller.
