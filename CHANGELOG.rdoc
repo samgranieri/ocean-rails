@@ -1,3 +1,7 @@
+== v1.22.3
+
+* String versions of exceptions in multi-class resource controller.
+
 == v1.22.2
 
 * Conditional loading for ActiveModel and OceanDynamo.
