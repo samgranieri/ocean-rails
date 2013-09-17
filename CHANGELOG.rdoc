@@ -1,4 +1,4 @@
-== v1.22.5
+== v1.22.6
 
 * OceanDynamo::Base => OceanDynamo::Table
 
