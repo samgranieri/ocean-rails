@@ -59,4 +59,4 @@ end
 
 
 ActiveRecord::Base.send(:include, Ocean::OceanResourceModel) if defined? ActiveRecord
-OceanDynamo::Base.send(:include, Ocean::OceanResourceModel) if defined? OceanDynamo
+OceanDynamo::Table.send(:include, Ocean::OceanResourceModel) if defined? OceanDynamo
