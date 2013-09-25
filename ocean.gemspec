@@ -45,7 +45,7 @@ OS, and back end code completely agnostic of whether it is called by a client br
   s.add_dependency "ffi-rzmq"           # ZeroMQ
   s.add_dependency "rack-attack"        # Flooding, etc.
   s.add_dependency "jbuilder"           # We use Jbuilder to render our JSON responses
-  s.add_dependency "ocean-dynamo"       # Amazon Web Services Ruby SDK
+  s.add_dependency "ocean-dynamo", ">= 0.4.1"
 
   s.add_development_dependency "rails", "~> 4.0"
   s.add_development_dependency "sqlite3"

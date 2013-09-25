@@ -1,3 +1,7 @@
+== v1.22.7
+
+* Updated bundle, specified minimum version of ocean-dynamo.
+
 == v1.22.6
 
 * OceanDynamo::Base => OceanDynamo::Table
