@@ -1,3 +1,10 @@
+== v1.23.0
+
+* Automatic loading of aws.yml in a similar manner to that of config.yml.
+  xxx.yml will be processed if present. If not, and the Rails environment
+  is production, xxx.yml.example will be processed. Otherwise, an error
+  message will be printed.
+
 == v1.22.7, v1.22.8
 
 * Updated bundle, specified minimum version of ocean-dynamo.

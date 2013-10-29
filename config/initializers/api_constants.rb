@@ -1,5 +1,17 @@
 f = File.join(Rails.root, "config/config.yml")
-unless File.exists?(f)
+ef = File.join(Rails.root, "config/config.yml.example")
+
+f = File.exists?(f) && f || 
+    File.exists?(ef) && Rails.env == 'production' && ef
+
+if f
+  cfg = YAML.load(File.read(f))
+  cfg.merge! cfg.fetch(Rails.env, {}) if cfg.fetch(Rails.env, {})
+  cfg.each do |k, v|
+    next if k =~ /[a-z]/
+    eval "#{k} = #{v.inspect}"
+  end
+else
   puts
   puts "-----------------------------------------------------------------------"
   puts "Constant definition file missing. Please copy config/config.yml.example"
@@ -10,10 +22,4 @@ unless File.exists?(f)
   puts "-----------------------------------------------------------------------"
   puts
   abort
-end
-cfg = YAML.load(File.read(f))
-cfg.merge! cfg.fetch(Rails.env, {}) if cfg.fetch(Rails.env, {})
-cfg.each do |k, v|
-  next if k =~ /[a-z]/
-  eval "#{k} = #{v.inspect}"
 end

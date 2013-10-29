@@ -42,6 +42,7 @@ OS, and back end code completely agnostic of whether it is called by a client br
   s.add_dependency "faraday_middleware" # JSON support
   s.add_dependency "typhoeus"           # Faraday can use Typhoeus to make parallel requests
   s.add_dependency "net-purge"          # For Varnish purges
+  s.add_dependency "ffi", "= 1.9.0"     # FFI (this version requirement should be lifted)
   s.add_dependency "ffi-rzmq"           # ZeroMQ
   s.add_dependency "rack-attack"        # Flooding, etc.
   s.add_dependency "jbuilder"           # We use Jbuilder to render our JSON responses

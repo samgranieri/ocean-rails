@@ -1,8 +1,12 @@
-require "aws-sdk"
-
 f = File.join(Rails.root, "config/aws.yml")
+ef = File.join(Rails.root, "config/aws.yml.example")
 
-unless File.exists?(f)
+f = File.exists?(f) && f || 
+    File.exists?(ef) && Rails.env == 'production' && ef
+
+if f
+  AWS.config YAML.load(File.read(f))[Rails.env]
+else
   puts
   puts "-----------------------------------------------------------------------"
   puts "AWS config file missing. Please copy config/aws.yml.example"
@@ -15,4 +19,4 @@ unless File.exists?(f)
   abort
 end
 
-AWS.config YAML.load(File.read(f))[Rails.env]
+
