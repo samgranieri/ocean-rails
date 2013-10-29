@@ -1,3 +1,7 @@
+== v1.23.1
+
+* Bug fix to previous release: nothing is now done if there's no example file.
+
 == v1.23.0
 
 * Automatic loading of aws.yml in a similar manner to that of config.yml.
