@@ -8,12 +8,13 @@ if File.exists?(ef)
   f = File.join(Rails.root, "config/config.yml")
 
   puts
+  puts "--- Rails.env = #{Rails.env}"
   puts "--- ef = #{ef}"
   puts "--- f = #{f}"
 
   # If the tailored file doesn't exist, and we're running in test mode
   # (which is the case under TeamCity), use the example file as-is.
-  f = (File.exists?(f) && f) || ((Rails.env == 'test') && ef)
+  f = (File.exists?(f) && f) || ef # ((Rails.env == 'test') && ef)
 
   puts "--- LOADING #{f}"
   puts

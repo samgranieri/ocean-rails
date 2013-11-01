@@ -1,3 +1,7 @@
+== v1.23.3
+
+* More faffing around with loading of yml.example files for TeamCity.
+
 == v1.23.2
 
 * xxxxx.yml.example files now potentially loaded in test and production mode.

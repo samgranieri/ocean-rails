@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ocean-rails (1.23.3)
+    ocean-rails (1.23.4)
       faraday
       faraday_middleware
       ffi (= 1.9.0)
