@@ -14,9 +14,8 @@ if File.exists?(ef)
 
   # If the tailored file doesn't exist, and we're running in test mode
   # (which is the case under TeamCity), use the example file as-is.
-  #f = (File.exists?(f) && f) || ef # ((Rails.env == 'test') && ef)
   unless File.exists?(f)
-    f = Rails.env != 'development' ? ef : false
+    f = ENV['OCEAN_API_HOST'] ? ef : false
   end
 
   puts "--- LOADING #{f}"

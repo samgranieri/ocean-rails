@@ -1,3 +1,7 @@
+== v1.23.7
+
+* Still more. Now using OCEAN_API_HOST.
+
 == v1.23.6
 
 * Still more.
