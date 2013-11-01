@@ -1,4 +1,3 @@
-
 # The is the example file
 ef = File.join(Rails.root, "config/aws.yml.example")
 
@@ -7,9 +6,12 @@ if File.exists?(ef)
 
   # This is the tailored file, not under source control.
   f = File.join(Rails.root, "config/aws.yml")
+  
   # If the tailored file doesn't exist, and we're running in test mode
   # (which is the case under TeamCity), use the example file as-is.
-  f = (File.exists?(f) && f) || ((Rails.env == 'test') && ef)
+  unless File.exists?(f)
+    f = ENV['OCEAN_API_HOST'] ? ef : false
+  end
 
   # If there is a file to process, do so
   if f

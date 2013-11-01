@@ -1,3 +1,7 @@
+== v1.23.8
+
+* xxxx.yml.example defaulting now works under TeamCity.
+
 == v1.23.7
 
 * Still more. Now using OCEAN_API_HOST.

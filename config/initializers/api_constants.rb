@@ -7,19 +7,11 @@ if File.exists?(ef)
   # This is the tailored file, not under source control.
   f = File.join(Rails.root, "config/config.yml")
 
-  puts
-  puts "--- Rails.env = #{Rails.env}"
-  puts "--- ef = #{ef}"
-  puts "--- f = #{f}"
-
   # If the tailored file doesn't exist, and we're running in test mode
   # (which is the case under TeamCity), use the example file as-is.
   unless File.exists?(f)
     f = ENV['OCEAN_API_HOST'] ? ef : false
   end
-
-  puts "--- LOADING #{f}"
-  puts
 
   # If there is a file to process, do so
   if f
