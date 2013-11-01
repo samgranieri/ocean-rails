@@ -1,3 +1,8 @@
+== v1.23.2
+
+* xxxxx.yml.example files now potentially loaded in test and production mode.
+  This is necessary to support TeamCity app init.
+
 == v1.23.1
 
 * Bug fix to previous release: nothing is now done if there's no example file.

@@ -8,7 +8,7 @@ if File.exists?(ef)
   f = File.join(Rails.root, "config/config.yml")
   # If the tailored file doesn't exist, and we're running in production mode
   # (which is the case under TeamCity), use the example file as-is.
-  f = File.exists?(f) && f || Rails.env == 'production' && ef
+  f = File.exists?(f) && f || Rails.env != 'development' && ef
 
   # If there is a file to process, do so
   if f
