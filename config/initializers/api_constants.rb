@@ -16,7 +16,7 @@ if File.exists?(ef)
   # (which is the case under TeamCity), use the example file as-is.
   #f = (File.exists?(f) && f) || ef # ((Rails.env == 'test') && ef)
   unless File.exists?(f)
-    f = Rails.env == 'test' ? ef : false
+    f = Rails.env != 'development' ? ef : false
   end
 
   puts "--- LOADING #{f}"

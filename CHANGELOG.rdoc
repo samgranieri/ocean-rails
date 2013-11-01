@@ -1,3 +1,7 @@
+== v1.23.6
+
+* Still more.
+
 == v1.23.5
 
 * Yet more faffing around.
