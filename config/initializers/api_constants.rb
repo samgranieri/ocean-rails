@@ -15,7 +15,7 @@ if File.exists?(ef)
 
   # If there is a file to process, do so
   if f
-    cfg = YAML.load(File.read(f))
+    cfg = YAML.load(ERB.new(File.read(f)).result)
     cfg.merge! cfg.fetch(Rails.env, {}) if cfg.fetch(Rails.env, {})
     cfg.each do |k, v|
       next if k =~ /[a-z]/

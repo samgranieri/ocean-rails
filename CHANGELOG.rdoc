@@ -1,3 +1,7 @@
+== v1.23.9
+
+* xxxx.yml config files can now use ERB evaluation.
+
 == v1.23.8
 
 * xxxx.yml.example defaulting now works under TeamCity.
