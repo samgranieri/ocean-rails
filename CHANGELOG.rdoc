@@ -1,4 +1,9 @@
-== v.1.23.10
+== v1.23.11
+
+* Minimum Ruby version removed from gemspec file. The requirement is still there,
+  just not explicitly stated.
+
+== v1.23.10
 
 * Minimum Ruby version specified as '~> 2' instead of '>= 2.0.0' as the latter
   doesn't work in Ocean deployment for some fucking bloody irritating shit reason.
