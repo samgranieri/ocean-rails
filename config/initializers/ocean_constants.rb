@@ -26,6 +26,8 @@
 # build dialog.
 #
 
+BASE_DOMAIN = "example.com" unless defined?(BASE_DOMAIN)  # For the Rails template generator
+
 OCEAN_API_HOST = (Rails.env == 'test' && "forbidden.#{BASE_DOMAIN}") ||
                  (ENV['OVERRIDE_OCEAN_API_HOST'] || 
                   ENV['OCEAN_API_HOST'] || 

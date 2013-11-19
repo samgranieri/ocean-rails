@@ -150,7 +150,7 @@ module OceanApplicationController
   def render_validation_errors(r, except: [])
     except = [except] unless except.is_a?(Array)
     except = except.collect(&:to_sym)
-    render json: r.errors.messages.except(*except), :status => 422
+    render json: r.errors.messages.except(*except), status: 422
   end
   
   #

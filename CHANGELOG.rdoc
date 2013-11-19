@@ -1,3 +1,8 @@
+== v1.24.0
+
+* Application template updated.
+* Reintroduced the minimum Ruby version spec.
+
 == v1.23.12
 
 * Minimum Ruby version removed from gemspec file. The requirement is still there,

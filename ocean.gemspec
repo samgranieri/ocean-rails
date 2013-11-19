@@ -32,7 +32,7 @@ platforms. OceanFront is object oriented, widget-based and HTML-less.
 
 Together, Ocean and OceanFront allow you to write front end code completely independent of browser type and client 
 OS, and back end code completely agnostic of whether it is called by a client browser or another server system."
-  #s.required_ruby_version = '~> 2'
+  s.required_ruby_version = '~> 2'
   s.license = 'MIT'
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
