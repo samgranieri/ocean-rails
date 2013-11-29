@@ -1,3 +1,3 @@
 module Ocean
-  VERSION = "1.24.2"
+  VERSION = "1.25.0"
 end
