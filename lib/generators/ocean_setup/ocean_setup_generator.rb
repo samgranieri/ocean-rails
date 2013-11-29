@@ -20,6 +20,10 @@ class OceanSetupGenerator < Rails::Generators::NamedBase #:nodoc: all
     copy_file "application_controller.rb", "#{Rails.root}/app/controllers/application_controller.rb"
   end
 
+  def install_application_helper
+    copy_file "application_helper.rb", "#{Rails.root}/app/helpers/application_controller.rb"
+  end
+
   def install_spec_helper_and_support_files
     copy_file "spec_helper.rb", "#{Rails.root}/spec/spec_helper.rb"
     copy_file "hyperlinks.rb", "#{Rails.root}/spec/support/hyperlinks.rb"
