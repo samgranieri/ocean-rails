@@ -1,3 +1,8 @@
+== v1.24.1
+
+* app/helpers/application_helper.rb reinstated in the ocean service generator. It seems
+  that inheritance doesn't work with helpers - look into this at a later point in time.
+
 == v1.24.0
 
 * Application template updated.
