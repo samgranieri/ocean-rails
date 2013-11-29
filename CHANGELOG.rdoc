@@ -1,3 +1,7 @@
+== v1.24.2
+
+* Generator now sets rails-4.0.1.
+
 == v1.24.1
 
 * app/helpers/application_helper.rb reinstated in the ocean service generator. It seems
