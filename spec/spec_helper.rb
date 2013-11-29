@@ -1,6 +1,7 @@
 require 'simplecov'
 SimpleCov.start do
   add_filter "/vendor/"
+  add_filter "/spec/support/hyperlinks.rb"
 end
 
 # Configure Rails Environment
