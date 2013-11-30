@@ -59,10 +59,10 @@ describe TheModel do
     describe ".collection" do
     
       before :each do
-        create :the_model, name: 'foo', description: "The Foo the_model", created_at: "2013-03-01T00:00:00Z".to_time
-        create :the_model, name: 'bar', description: "The Bar the_model", created_at: "2013-06-01T00:00:00Z".to_time
-        create :the_model, name: 'baz', description: "The Baz the_model", created_at: "2013-06-10T00:00:00Z".to_time
-        create :the_model, name: 'xux', description: "Xux",               created_at: "2013-07-01T00:00:00Z".to_time
+        create :the_model, name: 'foo', description: "The Foo the_model", created_at: "2013-03-01T00:00:00Z"
+        create :the_model, name: 'bar', description: "The Bar the_model", created_at: "2013-06-01T00:00:00Z"
+        create :the_model, name: 'baz', description: "The Baz the_model", created_at: "2013-06-10T00:00:00Z"
+        create :the_model, name: 'xux', description: "Xux",               created_at: "2013-07-01T00:00:00Z"
       end
 
     
@@ -101,9 +101,9 @@ describe TheModel do
       end
 
       it "should allow ranged matches" do
-        TheModel.collection(created_at: "2013-01-01T00:00:00Z,2013-12-31T23:59:59Z").length.should == 4
         TheModel.collection(created_at: "2013-04-01T00:00:00Z,2013-06-30T00:00:00Z").length.should == 2
         TheModel.collection(created_at: "2013-06-01T00:00:00Z,2013-07-01T00:00:00Z").length.should == 3
+        TheModel.collection(created_at: "2013-01-01T00:00:00Z,2013-12-31T23:59:59Z").length.should == 4
       end
         
     end

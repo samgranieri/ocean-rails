@@ -7,11 +7,15 @@ describe TheModel do
     @c = @i.class
     @saved_m = @c.varnish_invalidate_member
     @saved_c = @c.varnish_invalidate_collection
+    @saved_i = @c.index_only
+    @saved_r = @c.ranged_matchers
   end
 
   after :each do
     @c.ocean_resource_model invalidate_member: @saved_m,
-                            invalidate_collection: @saved_c
+                            invalidate_collection: @saved_c,
+                            index: @saved_i,
+                            ranged: @saved_r
   end
 
 
