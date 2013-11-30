@@ -21,23 +21,41 @@ describe TheModel do
   end
   
 
+  it "should have a collection class method" do
+    @c.collection
+  end
+
+
+
 
   it "should accept an :index keyword arg" do
-  	@c.ocean_resource_model index: [:name]
+    @c.ocean_resource_model index: [:name]
   end
     
   it ":index should default to [:name]" do
-  	@c.ocean_resource_model
-  	@c.index_only.should == [:name]
+    @c.ocean_resource_model
+    @c.index_only.should == [:name]
   end
 
   it ":index should be reachable through a class method" do
-  	@c.ocean_resource_model index: [:foo, :bar]
-  	@c.index_only.should == [:foo, :bar]
+    @c.ocean_resource_model index: [:foo, :bar]
+    @c.index_only.should == [:foo, :bar]
   end
 
-  it "should have a collection class method" do
-  	@c.collection
+
+
+  it "should accept an :ranged keyword arg" do
+    @c.ocean_resource_model ranged: []
+  end
+    
+  it ":ranged should default to []" do
+    @c.ocean_resource_model
+    @c.ranged_matchers.should == []
+  end
+
+  it ":ranged should be reachable through a class method" do
+    @c.ocean_resource_model ranged: [:foo, :bar]
+    @c.ranged_matchers.should == [:foo, :bar]
   end
 
 

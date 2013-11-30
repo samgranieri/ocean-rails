@@ -35,7 +35,8 @@ module Ocean
       # enumerating the Varnish +BAN+ HTTP request URI suffixes to use to invalidate a
       # collection of resources.
       #
-      def ocean_resource_model(index:                 [:name], 
+      def ocean_resource_model(index:                 [:name],
+                               ranged:                [],
       	                       search:                :description,
                                page_size:             25,
                                invalidate_member:     INVALIDATE_MEMBER_DEFAULT,
@@ -43,11 +44,13 @@ module Ocean
       	                      )
       	include ApiResource
       	cattr_accessor :index_only
+        cattr_accessor :ranged_matchers
       	cattr_accessor :index_search_property
         cattr_accessor :collection_page_size
         cattr_accessor :varnish_invalidate_member
         cattr_accessor :varnish_invalidate_collection
       	self.index_only = index
+        self.ranged_matchers = ranged
       	self.index_search_property = search
         self.collection_page_size = page_size
         self.varnish_invalidate_member = invalidate_member

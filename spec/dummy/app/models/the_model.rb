@@ -1,9 +1,10 @@
 class TheModel < ActiveRecord::Base
 
-  ocean_resource_model index: [:name], 
+  ocean_resource_model index: [:name, :created_at, :updated_at], 
                        search: :description,
                        invalidate_member:     INVALIDATE_MEMBER_DEFAULT + [lambda { |m| "foo/bar/baz($|?)" }],
-                       invalidate_collection: INVALIDATE_COLLECTION_DEFAULT
+                       invalidate_collection: INVALIDATE_COLLECTION_DEFAULT,
+                       ranged: [:created_at, :updated_at]
 
   attr_accessible :name, :description, :lock_version
 

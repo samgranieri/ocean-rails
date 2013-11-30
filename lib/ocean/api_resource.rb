@@ -47,7 +47,17 @@ module ApiResource
     def collection_internal(conds={}, group, search, page, page_size)
       if index_only != []
         new_conds = {}
-        index_only.each { |key| new_conds[key] = conds[key] if conds[key].present? }
+        ranges = {}
+        index_only.each do |key| 
+          val = conds[key]
+          next if val.blank?
+          if ranged_matchers.include?(key) && val.include?(",")
+            from, to = val.split(",")
+            new_conds[key] = DateTime.parse(from)..DateTime.parse(to)
+          else
+            new_conds[key] = val
+          end
+        end
         conds = new_conds
       end
       # Fold in the conditions
