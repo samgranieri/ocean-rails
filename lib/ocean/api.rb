@@ -173,8 +173,16 @@ class Api
   #
   def self.ban(path)     
     LOAD_BALANCERS.each do |host| 
-      call_p("http://#{host}", :ban, path)
+      call_p("http://#{host}", :ban, escape(path))
     end
+  end
+
+
+  #
+  # This escapes BAN request paths, which is needed as they are regexes.
+  #
+  def self.escape(path)
+    URI.escape(path, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
   end
 
   

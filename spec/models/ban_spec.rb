@@ -27,8 +27,8 @@ describe TheModel do
 
 
   it "should trigger two BANs when created" do
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/the_models#{INVALIDATE_COLLECTION_DEFAULT.first}")
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/foo/bar/baz($|?)")
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/the_models#{INVALIDATE_COLLECTION_DEFAULT.first}"))
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/foo/bar/baz($|?)"))
   	create :the_model
   end
 
@@ -36,9 +36,9 @@ describe TheModel do
   it "should trigger three BANs when updated" do
     Api.stub(:call_p)
   	m = create :the_model
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/the_models#{INVALIDATE_COLLECTION_DEFAULT.first}")
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/the_models/#{m.id}#{INVALIDATE_MEMBER_DEFAULT.first}")
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/foo/bar/baz($|?)")
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/the_models#{INVALIDATE_COLLECTION_DEFAULT.first}"))
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/the_models/#{m.id}#{INVALIDATE_MEMBER_DEFAULT.first}"))
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/foo/bar/baz($|?)"))
     m.name = "Zalagadoola"
  	  m.save!
   end
@@ -47,9 +47,9 @@ describe TheModel do
   it "should trigger three BANs when touched" do
     Api.stub(:call_p)
   	m = create :the_model
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/the_models#{INVALIDATE_COLLECTION_DEFAULT.first}")
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/the_models/#{m.id}#{INVALIDATE_MEMBER_DEFAULT.first}")
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/foo/bar/baz($|?)")
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/the_models#{INVALIDATE_COLLECTION_DEFAULT.first}"))
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/the_models/#{m.id}#{INVALIDATE_MEMBER_DEFAULT.first}"))
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/foo/bar/baz($|?)"))
  	  m.touch
   end
 
@@ -57,9 +57,9 @@ describe TheModel do
   it "should trigger three BANs when destroyed" do
     Api.stub(:call_p)
   	m = create :the_model
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/the_models#{INVALIDATE_COLLECTION_DEFAULT.first}")
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/the_models/#{m.id}#{INVALIDATE_MEMBER_DEFAULT.first}")
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/foo/bar/baz($|?)")
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/the_models#{INVALIDATE_COLLECTION_DEFAULT.first}"))
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/the_models/#{m.id}#{INVALIDATE_MEMBER_DEFAULT.first}"))
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/foo/bar/baz($|?)"))
   	m.destroy
   end
 

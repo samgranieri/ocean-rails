@@ -131,7 +131,7 @@ describe TheModel do
 
   it "the invalidation class method should use the suffixes defined by :invalidate_collection" do
     # The basic collection
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/the_models#{INVALIDATE_COLLECTION_DEFAULT.first}")
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/the_models#{INVALIDATE_COLLECTION_DEFAULT.first}"))
     # Do it!
     @c.invalidate
   end
@@ -158,11 +158,11 @@ describe TheModel do
 
   it "the invalidation instance method should use the suffixes defined by :invalidate_member AND :invalidate_collection" do
     # The basic collection
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/the_models#{INVALIDATE_COLLECTION_DEFAULT.first}")
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/the_models#{INVALIDATE_COLLECTION_DEFAULT.first}"))
     # The member itself and its subordinate relations/collections
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/the_models/#{@i.id}#{INVALIDATE_MEMBER_DEFAULT.first}")
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/the_models/#{@i.id}#{INVALIDATE_MEMBER_DEFAULT.first}"))
     # The lambda
-    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, "/v[0-9]+/foo/bar/baz($|?)")
+    Api.should_receive(:call_p).once.with("http://127.0.0.1", :ban, Api.escape("/v[0-9]+/foo/bar/baz($|?)"))
     # Do it!
     @i.invalidate
   end
