@@ -1,3 +1,7 @@
+== v1.25.2 ==
+
+* Varnish BAN URIs now escaped. Regexes need escaping.
+
 == v1.25.1 ==
 
 * Specs fixed.
