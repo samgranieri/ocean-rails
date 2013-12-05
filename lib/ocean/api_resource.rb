@@ -74,6 +74,8 @@ module ApiResource
       end
       # Pagination
       if page.present?
+        page = page.to_i
+        page_size = page_size.to_i
         return query.none if page < 0
         query = query.limit(page_size || collection_page_size).offset(page_size * page)
       end

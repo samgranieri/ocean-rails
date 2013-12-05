@@ -53,6 +53,13 @@ describe TheModelsController do
       coll.length.should == 0
     end
 
+    it "should return a paged collection" do
+      get :index, page_size: 30, page: 0
+      response.status.should == 200
+      JSON.parse(response.body).should be_an Array
+      JSON.parse(response.body).count.should == 3
+    end
+
   end
   
 end
