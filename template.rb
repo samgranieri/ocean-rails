@@ -2,9 +2,9 @@
 gem "ocean-rails", "~> 1.0"
 
 # Install a .rvmrc file
-run "rvm rvmrc create ruby-2.0.0-p247@rails-4.0.1"
+run "rvm rvmrc create ruby-2.0.0-p247@rails-4.0.2"
 # Select the ruby and gem bag
-run "rvm use ruby-2.0.0-p247@rails-4.0.1"
+run "rvm use ruby-2.0.0-p247@rails-4.0.2"
 # Run bundle install - we need the generators in it now
 run "bundle install"
 
