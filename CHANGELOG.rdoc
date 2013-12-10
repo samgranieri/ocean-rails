@@ -1,3 +1,7 @@
+== v1.26.0 ==
+
+* Collection matchers now detect integer and float ranges.
+
 == v1.25.4 ==
 
 * Generators now set rails-4.0.2.
