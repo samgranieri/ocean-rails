@@ -44,6 +44,8 @@ module ApiResource
     end
 
 
+    private 
+
     def collection_internal(conds={}, group, search, page, page_size)
       if index_only != []
         new_conds = {}
@@ -88,9 +90,9 @@ module ApiResource
       case val
       when ""
         ""
-      when val.to_i.to_s == val
+      when /^[+-][0-9]+$/
         val.to_i
-      when val.to_f.to_s == val
+      when /^[+-]([0-9]*\.[0-9]+|[0-9]+\.[0-9]*)$/
         val.to_f
       when /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z/
         DateTime.parse(val)
@@ -99,6 +101,8 @@ module ApiResource
       end
     end
 
+
+    public 
 
     #
     # Returns the latest version for the resource class. E.g.:
