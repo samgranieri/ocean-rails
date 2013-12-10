@@ -123,6 +123,12 @@ describe TheModel do
         TheModel.collection(score: "100.0,200.0").length.should == 0
       end
         
+      it "should allow ranged matches on strings" do
+        TheModel.collection(name: "bad,bba").length.should == 2
+        TheModel.collection(name: "xux,xux").length.should == 1
+        TheModel.collection(name: "a,z").length.should == 4
+      end
+        
     end
   end
 

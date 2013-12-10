@@ -1,3 +1,8 @@
+== v1.26.1
+
+* Range matching now also works on string attributes. Positive and negative integers and
+  floats also supported.
+
 == v1.26.0 ==
 
 * Collection matchers now detect integer and float ranges.

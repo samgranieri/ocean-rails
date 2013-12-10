@@ -21,6 +21,9 @@ module Ocean
       # +index+: defaults to <code>[:name]</code>. Enumerates the model attributes which
       # may be used for parameter matching and grouping.
       #
+      # +ranged+: defaults to <code>[]</code>. An array of attributes which should accept
+      # ranges in collection match operations.
+      #
       # +search+: defaults to +:description+. Names the model attribute used for substring
       # searches. The attribute must be a string or text attribute.
       #

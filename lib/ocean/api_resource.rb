@@ -24,7 +24,8 @@ module ApiResource
     #
     # The whole params hash can safely be passed as the input arg: keys are filtered so 
     # that matches only are done against the attributes declared in the controller using 
-    # +ocean_resource_model+.
+    # +ocean_resource_model+. Ranges are allowed for those attributes declared to accept
+    # them using the +ranged+ parameter of +ocean_resource_model+.
     #
     # The +group:+ keyword arg, if present, adds a +GROUP+ clause to the generated SQL.
     #
