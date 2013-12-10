@@ -70,6 +70,9 @@ module Dummy
 
     # Disable the asset pipeline
     config.assets.enabled = false
+
+    # We don't use locales
+    I18n.enforce_available_locales = false
   end
 end
 

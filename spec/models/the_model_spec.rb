@@ -59,10 +59,14 @@ describe TheModel do
     describe ".collection" do
     
       before :each do
-        create :the_model, name: 'foo', description: "The Foo the_model", created_at: "2013-03-01T00:00:00Z"
-        create :the_model, name: 'bar', description: "The Bar the_model", created_at: "2013-06-01T00:00:00Z"
-        create :the_model, name: 'baz', description: "The Baz the_model", created_at: "2013-06-10T00:00:00Z"
-        create :the_model, name: 'xux', description: "Xux",               created_at: "2013-07-01T00:00:00Z"
+        create :the_model, name: 'foo', description: "The Foo the_model", 
+          created_at: "2013-03-01T00:00:00Z", created_by: 10, score: 10.0
+        create :the_model, name: 'bar', description: "The Bar the_model", 
+          created_at: "2013-06-01T00:00:00Z", created_by: 20, score: 20.0
+        create :the_model, name: 'baz', description: "The Baz the_model", 
+          created_at: "2013-06-10T00:00:00Z", created_by: 30, score: 30.0
+        create :the_model, name: 'xux', description: "Xux",               
+          created_at: "2013-07-01T00:00:00Z", created_by: 40, score: 40.0
       end
 
     
@@ -100,10 +104,23 @@ describe TheModel do
         TheModel.collection(page: -1, page_size: 2).should == []
       end
 
-      it "should allow ranged matches" do
+
+      it "should allow ranged matches on datetimes" do
         TheModel.collection(created_at: "2013-04-01T00:00:00Z,2013-06-30T00:00:00Z").length.should == 2
         TheModel.collection(created_at: "2013-06-01T00:00:00Z,2013-07-01T00:00:00Z").length.should == 3
         TheModel.collection(created_at: "2013-01-01T00:00:00Z,2013-12-31T23:59:59Z").length.should == 4
+      end
+
+      it "should allow ranged matches on integers" do
+        TheModel.collection(created_by: "15,35").length.should == 2
+        TheModel.collection(created_by: "10,10").length.should == 1
+        TheModel.collection(created_by: "100,200").length.should == 0
+      end
+        
+      it "should allow ranged matches on floats" do
+        TheModel.collection(score: "15.0,35.76").length.should == 2
+        TheModel.collection(score: "10.0,10.00").length.should == 1
+        TheModel.collection(score: "100.0,200.0").length.should == 0
       end
         
     end

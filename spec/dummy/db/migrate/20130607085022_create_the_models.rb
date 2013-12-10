@@ -6,6 +6,7 @@ class CreateTheModels < ActiveRecord::Migration
       t.integer :lock_version
       t.integer :created_by
       t.integer :updated_by
+      t.float   :score
 
       t.timestamps
     end

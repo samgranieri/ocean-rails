@@ -4,10 +4,14 @@ describe "ranged matches for TheModel collections" do
 
   before :each do
     stub_const("LOAD_BALANCERS", [])
-    create :the_model, name: 'foo', description: "The Foo the_model", created_at: "2013-03-01T00:00:00Z"
-    create :the_model, name: 'bar', description: "The Bar the_model", created_at: "2013-06-01T00:00:00Z"
-    create :the_model, name: 'baz', description: "The Baz the_model", created_at: "2013-06-10T00:00:00Z"
-    create :the_model, name: 'xux', description: "Xux",               created_at: "2013-07-01T00:00:00Z"
+    create :the_model, name: 'foo', description: "The Foo the_model", 
+      created_at: "2013-03-01T00:00:00Z"
+    create :the_model, name: 'bar', description: "The Bar the_model", 
+      created_at: "2013-06-01T00:00:00Z"
+    create :the_model, name: 'baz', description: "The Baz the_model", 
+      created_at: "2013-06-10T00:00:00Z"
+    create :the_model, name: 'xux', description: "Xux",               
+      created_at: "2013-07-01T00:00:00Z"
   end
 
 
@@ -35,7 +39,8 @@ describe "ranged matches for TheModel collections" do
 
   it "should perform exact matching on created_at" do
     permit_with 200
-    get "/v1/the_models", {"created_at" => "2013-06-10T00:00:00Z"}, 
+    get "/v1/the_models", 
+      {"created_at" => "2013-06-10T00:00:00Z"}, 
       {'HTTP_ACCEPT' => "application/json", 
        'X-API-Token' => "boy-is-this-fake"}
     response.status.should be(200)
@@ -46,7 +51,8 @@ describe "ranged matches for TheModel collections" do
 
   it "should perform range matching on created_at" do
     permit_with 200
-    get "/v1/the_models", {"created_at" => "2013-06-01T00:00:00Z,2013-06-30T00:00:00Z"}, 
+    get "/v1/the_models", 
+      {"created_at" => "2013-06-01T00:00:00Z,2013-06-30T00:00:00Z"}, 
       {'HTTP_ACCEPT' => "application/json", 
        'X-API-Token' => "boy-is-this-fake"}
     response.status.should be(200)

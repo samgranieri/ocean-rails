@@ -50,15 +50,10 @@ module ApiResource
         index_only.each do |key| 
           val = conds[key]
           next unless val
-          if ranged_matchers.include?(key) 
-            if val.include?(",")
-              from, to = val.split(",")
-              new_conds[key] = Range.new(DateTime.parse(from), DateTime.parse(to))
-            else
-              new_conds[key] = DateTime.parse(val)
-            end
+          if ranged_matchers.include?(key) && val.include?(",")
+            new_conds[key] = parse_range(val)
           else
-            new_conds[key] = val
+            new_conds[key] = parse_scalar(val)
           end
         end
         conds = new_conds
@@ -81,6 +76,27 @@ module ApiResource
       end
       # Finally, return the accumulated Relation
       query
+    end
+
+
+    def parse_range(val)
+      from, to = val.split(",")
+      Range.new(parse_scalar(from), parse_scalar(to))
+    end
+
+    def parse_scalar(val)
+      case val
+      when ""
+        ""
+      when val.to_i.to_s == val
+        val.to_i
+      when val.to_f.to_s == val
+        val.to_f
+      when /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z/
+        DateTime.parse(val)
+      else
+        val
+      end
     end
 
 

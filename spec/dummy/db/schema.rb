@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20130607085022) do
     t.integer  "lock_version"
     t.integer  "created_by"
     t.integer  "updated_by"
+    t.float    "score"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
