@@ -24,7 +24,8 @@ module ApiResource
     #
     # The whole params hash can safely be passed as the input arg: keys are filtered so 
     # that matches only are done against the attributes declared in the controller using 
-    # +ocean_resource_model+.
+    # +ocean_resource_model+. Ranges are allowed for those attributes declared to accept
+    # them using the +ranged+ parameter of +ocean_resource_model+.
     #
     # The +group:+ keyword arg, if present, adds a +GROUP+ clause to the generated SQL.
     #
@@ -43,6 +44,8 @@ module ApiResource
       collection_internal bag, bag[:group], bag[:search], bag[:page], bag[:page_size]
     end
 
+
+    private 
 
     def collection_internal(conds={}, group, search, page, page_size)
       if index_only != []
@@ -88,9 +91,9 @@ module ApiResource
       case val
       when ""
         ""
-      when val.to_i.to_s == val
+      when /^[+-][0-9]+$/
         val.to_i
-      when val.to_f.to_s == val
+      when /^[+-]([0-9]*\.[0-9]+|[0-9]+\.[0-9]*)$/
         val.to_f
       when /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z/
         DateTime.parse(val)
@@ -99,6 +102,8 @@ module ApiResource
       end
     end
 
+
+    public 
 
     #
     # Returns the latest version for the resource class. E.g.:
