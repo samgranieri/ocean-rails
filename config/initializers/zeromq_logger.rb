@@ -1,5 +1,5 @@
 
-if Rails.env == 'production'
+if Rails.env == 'never' # 'production'
 
   # Use a different logger for distributed setups
   Rails.logger = ActiveSupport::TaggedLogging.new(ZeromqLogger.new)
