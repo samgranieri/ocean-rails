@@ -1,7 +1,7 @@
 # The is the example file
 ef = File.join(Rails.root, "config/config.yml.example")
 
-# Only load AWS data if there is an example file
+# Only load config data if there is an example file
 if File.exists?(ef)
 
   # This is the tailored file, not under source control.
