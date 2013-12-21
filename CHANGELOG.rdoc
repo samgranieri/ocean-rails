@@ -1,3 +1,7 @@
+== 1.27.2
+
+* Blank OVERRIDE_XXX vars are now ignored.
+
 == 1.27.1
 
 * A config.yml constant XXX can now be overridden by a corresponding ENV

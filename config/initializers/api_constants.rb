@@ -19,7 +19,7 @@ if File.exists?(ef)
     cfg.merge! cfg.fetch(Rails.env, {}) if cfg.fetch(Rails.env, {})
     cfg.each do |k, v|
       next if k =~ /[a-z]/
-      if ENV["OVERRIDE_#{k}"]
+      if ENV["OVERRIDE_#{k}"] && ENV["OVERRIDE_#{k}"] != ""
         eval "#{k} = #{ENV["OVERRIDE_#{k}"].inspect}"
       else
         eval "#{k} = #{v.inspect}"
