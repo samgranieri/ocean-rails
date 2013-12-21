@@ -7,8 +7,8 @@ if File.exists?(ef)
   # This is the tailored file, not under source control.
   f = File.join(Rails.root, "config/config.yml")
 
-  # If the tailored file doesn't exist, and we're running in test mode
-  # (which is the case under TeamCity), use the example file as-is.
+  # If the tailored file doesn't exist, and we're running under TeamCity, 
+  # use the example file as-is.
   unless File.exists?(f)
     f = ENV['OCEAN_API_HOST'] ? ef : false
   end
@@ -19,7 +19,11 @@ if File.exists?(ef)
     cfg.merge! cfg.fetch(Rails.env, {}) if cfg.fetch(Rails.env, {})
     cfg.each do |k, v|
       next if k =~ /[a-z]/
-      eval "#{k} = #{v.inspect}"
+      if ENV["OVERRIDE_#{k}"]
+        eval "#{k} = #{ENV["OVERRIDE_#{k}"].inspect}"
+      else
+        eval "#{k} = #{v.inspect}"
+      end
     end
   else
     # Otherwise print an error message and abort.

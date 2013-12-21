@@ -1,3 +1,9 @@
+== 1.27.1
+
+* A config.yml constant XXX can now be overridden by a corresponding ENV
+  variable OVERRIDE_XXX. This is used to specify passwords when running
+  under TeamCity, where the untailored config.yml.example file is used.
+
 == 1.27.0
 
 * Templates now use postgresql rather than mysql in the original Gemfile.
