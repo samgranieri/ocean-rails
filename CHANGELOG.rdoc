@@ -1,3 +1,9 @@
+== 1.27.3
+
+* TeamCity can now override both the master and staging environment passwords
+  using OVERRIDE_API_PASSWORD. Separate master and staging passwords using a comma,
+  without a following space.
+
 == 1.27.2
 
 * Blank OVERRIDE_XXX vars are now ignored.
