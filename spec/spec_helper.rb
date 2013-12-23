@@ -1,7 +1,14 @@
 require 'simplecov'
 SimpleCov.start do
-  add_filter "/vendor/"
+  add_filter "/config/initializers/api_constants.rb"
+  add_filter "/config/initializers/aws_constants.rb"
+  add_filter "/config/initializers/ocean_constants.rb"
+  add_filter "/config/initializers/zeromq_logger.rb"
+  add_filter "/lib/ocean/zero_log.rb"
+  add_filter "/lib/ocean/zeromq_logger.rb"
+  add_filter "/spec/support/active_model_lint.rb"
   add_filter "/spec/support/hyperlinks.rb"
+  add_filter "/vendor/"
 end
 
 # Configure Rails Environment

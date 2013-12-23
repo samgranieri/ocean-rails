@@ -19,8 +19,15 @@ if File.exists?(ef)
     cfg.merge! cfg.fetch(Rails.env, {}) if cfg.fetch(Rails.env, {})
     cfg.each do |k, v|
       next if k =~ /[a-z]/
-      if ENV["OVERRIDE_#{k}"] && ENV["OVERRIDE_#{k}"] != ""
-        eval "#{k} = #{ENV["OVERRIDE_#{k}"].inspect}"
+      override = ENV["OVERRIDE_#{k}"]
+      if override && override != ""
+        master, staging = override.split(',')
+        if staging.present? && k == "API_PASSWORD"
+          pw = (ENV['GIT_BRANCH'] == 'staging' ? staging : master)
+          eval "#{k} = #{pw.inspect}"
+        else
+          eval "#{k} = #{override.inspect}"
+        end
       else
         eval "#{k} = #{v.inspect}"
       end
