@@ -46,3 +46,53 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 end
 
+
+# ------------------------------------------------------------------------------------
+# Uncomment the entire following section if you're creating a client app.
+# You can delete this section if you're creating a REST service.
+# ------------------------------------------------------------------------------------
+
+# # Figure out the external URI of the webapp against which to test the front end.
+# dns_name = "webshop"                # Set this to your client apps' DNS name
+# # Don't modify any of these, set environment vars instead.
+# ocean_env = ENV['GIT_BRANCH'] || ENV['OCEAN_FRONTEND'] || "master"
+# ocean_env = "master" if ocean_env == "<default>"
+# client_host = ENV['CLIENT_HOST'] || "http://#{ocean_env}-#{dns_name}.#{BASE_DOMAIN}"
+# client_port = ENV['CLIENT_PORT'] || 80
+
+
+# # Configure Watir
+# WatirWebdriverRails.host = client_host
+# WatirWebdriverRails.port = client_port
+# WatirWebdriverRails.close_browser_after_finish = true
+
+# URL = "#{client_host}:#{client_port}"
+
+# def setup_browser(uri)
+#   if RUBY_PLATFORM =~ /linux/
+#     @headless = Headless.new
+#     @headless.start
+#     b = Watir::Browser.start uri
+#   else
+#     b = Watir::Browser.new ENV["browser"] || :ff
+#     b.goto uri
+#   end
+
+#   # Make sure that window is maximized to not get viewport errors
+#   screen_width = b.execute_script("return screen.width;")
+#   screen_height = b.execute_script("return screen.height;")
+#   b.driver.manage.window.resize_to(screen_width,screen_height)
+#   b.driver.manage.window.move_to(0,0)
+#   b
+# end
+
+
+# def teardown_browser(browser)
+#   if RUBY_PLATFORM =~ /linux/
+#     #@headless.take_screenshot "screenshot-#{rand(1000000000)}.jpg"
+#     browser.close
+#     @headless.destroy
+#   else
+#     browser.close
+#   end
+# end

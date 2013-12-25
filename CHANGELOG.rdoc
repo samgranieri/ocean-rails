@@ -1,3 +1,7 @@
+== 1.27.4
+
+* Updated generators.
+
 == 1.27.3
 
 * TeamCity can now override both the master and staging environment passwords
