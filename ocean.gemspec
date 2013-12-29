@@ -46,7 +46,7 @@ OS, and back end code completely agnostic of whether it is called by a client br
   s.add_dependency "ffi-rzmq"           # ZeroMQ
   s.add_dependency "rack-attack"        # Flooding, etc.
   s.add_dependency "jbuilder"           # We use Jbuilder to render our JSON responses
-  s.add_dependency "ocean-dynamo", ">= 0.5"
+  s.add_dependency "ocean-dynamo", ">= 0.5.6"
 
   s.add_development_dependency "rails", "~> 4.0"
   s.add_development_dependency "sqlite3"
@@ -54,5 +54,5 @@ OS, and back end code completely agnostic of whether it is called by a client br
   s.add_development_dependency "webmock"
   s.add_development_dependency "simplecov"
   s.add_development_dependency "factory_girl_rails", "~> 4.0"
-  s.add_development_dependency "fake_dynamo", "~> 0.1.3"
+  #s.add_development_dependency "fake_dynamo", "~> 0.1.3"
 end

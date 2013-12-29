@@ -1,3 +1,7 @@
+== 1.27.5
+
+* Version 0.5.6 of ocean-dynamo specified as minimum.
+
 == 1.27.4
 
 * Updated generators.
