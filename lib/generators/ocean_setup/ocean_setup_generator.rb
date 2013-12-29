@@ -33,6 +33,12 @@ class OceanSetupGenerator < Rails::Generators::NamedBase #:nodoc: all
     template "routes.rb", "#{Rails.root}/config/routes.rb"
   end
 
+  def turn_off_locales
+    application "# No locales
+    config.i18n.enforce_available_locales = false    
+    "
+  end
+
   def turn_off_asset_pipeline
     application "# Disable the asset pipeline
     config.assets.enabled = false    
@@ -67,6 +73,11 @@ class OceanSetupGenerator < Rails::Generators::NamedBase #:nodoc: all
   def install_config_yml_files
     template  "config.yml.example", "#{Rails.root}/config/config.yml.example"
     template  "config.yml.example", "#{Rails.root}/config/config.yml"
+  end
+
+  def install_aws_yml_files
+    template  "aws.yml.example", "#{Rails.root}/config/aws.yml.example"
+    template  "aws.yml.example", "#{Rails.root}/config/aws.yml"
   end
 
   def replace_gemfile

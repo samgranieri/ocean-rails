@@ -1,3 +1,8 @@
+== 1.27.6
+
+* The application generator now always sets up an aws.yml.example file.
+* Amended spec_helper.rb commented-out section for client apps.
+
 == 1.27.5
 
 * Version 0.5.6 of ocean-dynamo specified as minimum.
