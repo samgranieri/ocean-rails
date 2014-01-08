@@ -1,3 +1,7 @@
+== 1.21.2
+
+* Api.escape now also escapes [ and ].
+
 == 1.21.1
 
 * Api.escape erroneously escaped the $ character. Fixed.

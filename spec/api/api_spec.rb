@@ -344,6 +344,18 @@ describe Api do
       Api.escape("?").should == "%3F"
     end
 
+    it "should escape the left bracket" do
+      Api.escape("[").should == "%5B"
+    end
+
+    it "should escape the right bracket" do
+      Api.escape("]").should == "%5D"
+    end
+
+    it "should not escape parens" do
+      Api.escape("()").should == "()"
+    end
+
     it "should not escape dollar signs" do
       Api.escape("$").should == "$"
     end
@@ -370,14 +382,6 @@ describe Api do
 
     it "should not escape underscores" do
       Api.escape("_").should == "_"
-    end
-
-    it "should not escape parens" do
-      Api.escape("()").should == "()"
-    end
-
-    it "should not escape brackets" do
-      Api.escape("[]").should == "[]"
     end
 
     it "should not escape letters or numbers" do
