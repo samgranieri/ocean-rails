@@ -1,8 +1,12 @@
-== 1.21.2
+== 1.28.3
+
+* Added the TEST_API_PASSWORD splitting code to the spec_helper template.
+
+== 1.28.2
 
 * Api.escape now also escapes [ and ].
 
-== 1.21.1
+== 1.28.1
 
 * Api.escape erroneously escaped the $ character. Fixed.
 
