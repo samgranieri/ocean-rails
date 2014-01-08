@@ -344,6 +344,10 @@ describe Api do
       Api.escape("?").should == "%3F"
     end
 
+    it "should not escape dollar signs" do
+      Api.escape("$").should == "$"
+    end
+
     it "should not escape slashes (/)" do
       Api.escape("/").should == "/"
     end

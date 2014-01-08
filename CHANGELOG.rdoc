@@ -1,3 +1,7 @@
+== 1.21.1
+
+* Api.escape erroneously escaped the $ character. Fixed.
+
 == 1.28.0
 
 * Api.escape now only escapes the characters \, |, and ?. The corresponding unescaping
