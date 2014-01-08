@@ -1,3 +1,9 @@
+== 1.28.0
+
+* Api.escape now only escapes the characters \, |, and ?. The corresponding unescaping
+  is done in Varnish (default.vcl) so that BAN regexps work as expected. This should fix
+  the aggressive caching.
+
 == 1.27.6
 
 * The application generator now always sets up an aws.yml.example file.

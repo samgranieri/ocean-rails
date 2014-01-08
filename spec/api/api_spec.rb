@@ -329,4 +329,57 @@ describe Api do
     end
   end
 
+
+  describe ".escape" do
+
+    it "should escape the backslash (\)" do
+      Api.escape("\\").should == "%5C"
+    end
+
+    it "should escape the pipe (|)" do
+      Api.escape("|").should == "%7C"
+    end
+
+    it "should escape the backslash (\)" do
+      Api.escape("?").should == "%3F"
+    end
+
+    it "should not escape slashes (/)" do
+      Api.escape("/").should == "/"
+    end
+
+    it "should not escape plusses (+)" do
+      Api.escape("+").should == "+"
+    end
+
+    it "should not escape asterisks" do
+      Api.escape("*").should == "*"
+    end
+
+    it "should not escape full stops" do
+      Api.escape(".").should == "."
+    end
+
+    it "should not escape hyphens" do
+      Api.escape("-").should == "-"
+    end
+
+    it "should not escape underscores" do
+      Api.escape("_").should == "_"
+    end
+
+    it "should not escape parens" do
+      Api.escape("()").should == "()"
+    end
+
+    it "should not escape brackets" do
+      Api.escape("[]").should == "[]"
+    end
+
+    it "should not escape letters or numbers" do
+      Api.escape("AaBbCc123").should == "AaBbCc123"
+    end
+
+  end
+
 end

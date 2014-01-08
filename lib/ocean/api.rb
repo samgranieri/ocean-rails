@@ -182,7 +182,7 @@ class Api
   # This escapes BAN request paths, which is needed as they are regexes.
   #
   def self.escape(path)
-    URI.escape(path, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
+    URI.escape(path, Regexp.new("[^/\\-+_.!~*'()\\[\\]a-zA-Z0-9]"))
   end
 
   
